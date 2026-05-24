@@ -9,899 +9,198 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0a0a0f;
-            --bg-2: #12121a;
-            --bg-3: #1a1a25;
-            --surface: #222230;
-            --border: rgba(255,255,255,0.06);
-            --border-light: rgba(255,255,255,0.12);
-            --text: #f0f0f5;
-            --text-secondary: #9a9aa8;
-            --text-dim: #555560;
-            --text-fade: #2a2a35;
-            --accent: #ff3366;
-            --accent-light: #ff5588;
-            --accent-2: #00d4aa;
-            --accent-3: #6366f1;
-            --accent-glow: rgba(255,51,102,0.15);
-            --success: #00d4aa;
-            --warning: #f59e0b;
-            --error: #ef4444;
+            --bg: #0a0a0f; --bg-2: #12121a; --bg-3: #1a1a25; --surface: #222230;
+            --border: rgba(255,255,255,0.06); --border-light: rgba(255,255,255,0.12);
+            --text: #f0f0f5; --text-secondary: #9a9aa8; --text-dim: #555560; --text-fade: #2a2a35;
+            --accent: #ff3366; --accent-light: #ff5588; --accent-2: #00d4aa; --accent-3: #6366f1;
+            --accent-glow: rgba(255,51,102,0.15); --success: #00d4aa; --warning: #f59e0b; --error: #ef4444;
         }
-
         * { margin:0; padding:0; box-sizing:border-box; }
         html { scroll-behavior:smooth; }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.5s ease;
-        }
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .loading-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 20px;
-        }
+        /* Loading */
+        .loading-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; transition: opacity 0.5s ease; }
+        .loading-screen.hidden { opacity: 0; pointer-events: none; }
+        .loading-logo { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 20px; }
         .loading-logo span { color: var(--accent); }
-        .loading-bar {
-            width: 200px;
-            height: 4px;
-            background: var(--bg-3);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .loading-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent), var(--accent-3));
-            border-radius: 2px;
-            animation: loadingProgress 2s ease forwards;
-        }
-        @keyframes loadingProgress {
-            0% { width: 0%; }
-            50% { width: 60%; }
-            100% { width: 100%; }
-        }
-        .loading-text {
-            margin-top: 16px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
+        .loading-bar { width: 200px; height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
+        .loading-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-3)); border-radius: 2px; animation: loadingProgress 2s ease forwards; }
+        @keyframes loadingProgress { 0% { width: 0%; } 50% { width: 60%; } 100% { width: 100%; } }
+        .loading-text { margin-top: 16px; font-size: 0.8rem; color: var(--text-dim); }
 
-        /* ===== TELEGRAM USER HEADER ===== */
-        .tg-header {
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
-            padding: 20px;
-            border-radius: 0 0 24px 24px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .tg-header::before {
-            content: '';
-            position: absolute;
-            top: -50%; right: -20%;
-            width: 200px; height: 200px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-        }
-        .tg-user {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            position: relative;
-            z-index: 2;
-        }
-        .tg-avatar {
-            width: 56px; height: 56px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: #fff;
-            border: 2px solid rgba(255,255,255,0.3);
-            overflow: hidden;
-        }
-        .tg-avatar img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .tg-info h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .tg-info .uid {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.7);
-            font-family: 'Space Grotesk', monospace;
-        }
-        .tg-premium {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 8px;
-            padding: 4px 12px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 100px;
-            font-size: 0.7rem;
-            color: #fff;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .tg-premium.active {
-            background: rgba(0,212,170,0.3);
-            color: #fff;
-        }
-        .tg-premium.admin {
-            background: rgba(255,193,7,0.3);
-            color: #fff;
-        }
-        .tg-premium i { font-size: 0.7rem; }
+        /* Header */
+        .tg-header { background: linear-gradient(135deg, var(--accent), var(--accent-3)); padding: 20px; border-radius: 0 0 24px 24px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .tg-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+        .tg-user { display: flex; align-items: center; gap: 16px; position: relative; z-index: 2; }
+        .tg-avatar { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; border: 2px solid rgba(255,255,255,0.3); overflow: hidden; }
+        .tg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .tg-info h3 { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .tg-info .uid { font-size: 0.75rem; color: rgba(255,255,255,0.7); font-family: 'Space Grotesk', monospace; }
+        .tg-premium { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 12px; background: rgba(255,255,255,0.15); border-radius: 100px; font-size: 0.7rem; color: #fff; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+        .tg-premium.active { background: rgba(0,212,170,0.3); }
+        .tg-premium.admin { background: rgba(255,193,7,0.3); }
 
-        /* ===== NAV ===== */
-        .nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 16px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(10,10,15,0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #fff;
-            text-decoration: none;
-        }
+        /* Nav */
+        .nav { position: sticky; top: 0; z-index: 1000; padding: 16px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+        .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.2rem; color: #fff; text-decoration: none; }
         .nav-logo span { color: var(--accent); }
-        .nav-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-        }
-        .nav-status .dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,212,170,0.4); }
-            50% { opacity: 0.5; box-shadow: 0 0 0 6px rgba(0,212,170,0); }
-        }
+        .nav-status { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-dim); }
+        .nav-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,212,170,0.4); } 50% { opacity: 0.5; box-shadow: 0 0 0 6px rgba(0,212,170,0); } }
 
-        /* ===== HERO ===== */
-        .hero {
-            padding: 30px 5% 40px;
-            text-align: center;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            padding: 8px 18px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            color: var(--accent-2);
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -2px;
-            margin-bottom: 12px;
-        }
-        .hero h1 .main {
-            background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero-desc {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            max-width: 400px;
-            margin: 16px auto 24px;
-            line-height: 1.6;
-        }
+        /* Hero */
+        .hero { padding: 30px 5% 40px; text-align: center; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-2); border: 1px solid var(--border); padding: 8px 18px; border-radius: 100px; font-size: 0.75rem; color: var(--accent-2); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; font-family: 'Space Grotesk', sans-serif; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 700; line-height: 1; letter-spacing: -2px; margin-bottom: 12px; }
+        .hero h1 .main { background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-desc { font-size: 0.95rem; color: var(--text-secondary); max-width: 400px; margin: 16px auto 24px; line-height: 1.6; }
 
-        /* ===== SECTIONS ===== */
-        .section {
-            padding: 40px 5%;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-        .section-label {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.7rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(1.5rem, 3vw, 2.2rem);
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -1px;
-        }
-        .section-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 8px;
-            line-height: 1.5;
-        }
+        /* Sections */
+        .section { padding: 40px 5%; max-width: 800px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 28px; }
+        .section-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; font-weight: 600; margin-bottom: 8px; }
+        .section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; color: #fff; letter-spacing: -1px; }
+        .section-desc { color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; line-height: 1.5; }
 
-        /* ===== BUTTONS ===== */
-        .btn {
-            padding: 14px 24px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border: none;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border-radius: 12px;
-            transition: all 0.25s ease;
-            cursor: pointer;
-            width: 100%;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            color: #fff;
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255,51,102,0.3);
-        }
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .btn-secondary {
-            background: var(--bg-2);
-            color: var(--text);
-            border: 1.5px solid var(--border);
-        }
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            background: var(--bg-3);
-        }
-        .btn-success {
-            background: linear-gradient(135deg, var(--accent-2), #00b894);
-            color: #fff;
-        }
-        .btn-icon {
-            width: 42px;
-            height: 42px;
-            padding: 0;
-            border-radius: 12px;
-        }
+        /* Buttons */
+        .btn { padding: 14px 24px; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; border: none; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 12px; transition: all 0.25s ease; cursor: pointer; width: 100%; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: #fff; box-shadow: 0 4px 20px var(--accent-glow); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,51,102,0.3); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background: var(--bg-2); color: var(--text); border: 1.5px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); background: var(--bg-3); }
+        .btn-success { background: linear-gradient(135deg, var(--accent-2), #00b894); color: #fff; }
 
-        /* ===== DOWNLOAD SECTION ===== */
-        .download-section {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .download-input-wrap {
-            position: relative;
-            margin-bottom: 16px;
-        }
-        .download-input {
-            width: 100%;
-            padding: 16px 20px;
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            outline: none;
-            transition: 0.2s;
-        }
-        .download-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-        .download-input::placeholder {
-            color: var(--text-dim);
-        }
-        .download-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .download-btn {
-            padding: 16px;
-            border-radius: 14px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .download-btn.video {
-            background: linear-gradient(135deg, rgba(255,51,102,0.15), rgba(255,51,102,0.05));
-            border: 1px solid rgba(255,51,102,0.2);
-            color: var(--accent);
-        }
-        .download-btn.audio {
-            background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05));
-            border: 1px solid rgba(0,212,170,0.2);
-            color: var(--accent-2);
-        }
-        .download-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-        }
-        .download-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .download-btn i {
-            font-size: 1.5rem;
-        }
-        .download-btn span {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+        /* Download Section */
+        .download-section { background: var(--bg-2); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+        .download-input-wrap { position: relative; margin-bottom: 16px; }
+        .download-input { width: 100%; padding: 16px 20px; background: var(--bg-3); border: 1px solid var(--border); border-radius: 14px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: 0.2s; }
+        .download-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .download-input::placeholder { color: var(--text-dim); }
+        .download-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .download-btn { padding: 16px; border-radius: 14px; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.2s; font-family: 'Inter', sans-serif; }
+        .download-btn.video { background: linear-gradient(135deg, rgba(255,51,102,0.15), rgba(255,51,102,0.05)); border: 1px solid rgba(255,51,102,0.2); color: var(--accent); }
+        .download-btn.audio { background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05)); border: 1px solid rgba(0,212,170,0.2); color: var(--accent-2); }
+        .download-btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .download-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .download-btn i { font-size: 1.5rem; }
+        .download-btn span { font-size: 0.85rem; font-weight: 600; }
 
-        /* ===== TOAST NOTIFICATION ===== */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
-        }
-        .toast {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
-            color: var(--text);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            animation: toastIn 0.3s ease;
-            pointer-events: auto;
-            min-width: 280px;
-            max-width: 90vw;
-        }
+        /* Toast */
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+        .toast { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: var(--text); box-shadow: 0 8px 32px rgba(0,0,0,0.4); animation: toastIn 0.3s ease; pointer-events: auto; min-width: 280px; max-width: 90vw; }
         .toast.success { border-left: 3px solid var(--success); }
         .toast.error { border-left: 3px solid var(--error); }
         .toast.warning { border-left: 3px solid var(--warning); }
         .toast.info { border-left: 3px solid var(--accent-3); }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .toast-out {
-            animation: toastOut 0.3s ease forwards;
-        }
-        @keyframes toastOut {
-            to { opacity: 0; transform: translateY(-20px); }
-        }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .toast-out { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); } }
 
-        /* ===== STATS GRID ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            transition: 0.2s;
-        }
-        .stat-card:hover {
-            border-color: var(--border-light);
-        }
-        .stat-card .value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1;
-        }
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: 0.2s; }
+        .stat-card:hover { border-color: var(--border-light); }
+        .stat-card .value { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1; }
         .stat-card .value.accent { color: var(--accent); }
         .stat-card .value.success { color: var(--accent-2); }
-        .stat-card .label {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-top: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .stat-card .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* ===== TOGGLE SWITCHES ===== */
-        .toggle-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
-        }
-        .toggle-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px 18px;
-            transition: 0.2s;
-        }
+        /* Toggles */
+        .toggle-group { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+        .toggle-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; transition: 0.2s; }
         .toggle-item:hover { border-color: var(--border-light); }
-        .toggle-item .info h4 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 2px;
-        }
-        .toggle-item .info p {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-        }
-        .switch {
-            position: relative;
-            width: 48px;
-            height: 26px;
-            cursor: pointer;
-        }
+        .toggle-item .info h4 { font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .toggle-item .info p { font-size: 0.75rem; color: var(--text-dim); }
+        .switch { position: relative; width: 48px; height: 26px; cursor: pointer; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            inset: 0;
-            background: var(--bg-3);
-            border-radius: 26px;
-            transition: 0.3s;
-            border: 1px solid var(--border);
-        }
-        .slider::before {
-            content: '';
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background: var(--text-dim);
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .switch input:checked + .slider {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .switch input:checked + .slider::before {
-            transform: translateX(22px);
-            background: #fff;
-        }
+        .slider { position: absolute; inset: 0; background: var(--bg-3); border-radius: 26px; transition: 0.3s; border: 1px solid var(--border); }
+        .slider::before { content: ''; position: absolute; height: 20px; width: 20px; left: 2px; bottom: 2px; background: var(--text-dim); border-radius: 50%; transition: 0.3s; }
+        .switch input:checked + .slider { background: var(--accent); border-color: var(--accent); }
+        .switch input:checked + .slider::before { transform: translateX(22px); background: #fff; }
 
-        /* ===== SELECT DROPDOWN ===== */
-        .select-group {
-            margin: 16px 0;
-        }
-        .select-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .custom-select {
-            width: 100%;
-            padding: 14px 18px;
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            outline: none;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239a9aa8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 40px;
-        }
-        .custom-select:focus {
-            border-color: var(--accent);
-        }
-        .custom-select option {
-            background: var(--bg-3);
-            color: var(--text);
-        }
+        /* Select */
+        .select-group { margin: 16px 0; }
+        .select-group label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .custom-select { width: 100%; padding: 14px 18px; background: var(--bg-3); border: 1px solid var(--border); border-radius: 14px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239a9aa8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+        .custom-select:focus { border-color: var(--accent); }
+        .custom-select option { background: var(--bg-3); color: var(--text); }
 
-        /* ===== FEATURE CARDS ===== */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-        .feature-card {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .feature-card:hover {
-            background: var(--bg-3);
-            border-color: var(--border-light);
-            transform: translateX(4px);
-        }
-        .feature-card .icon-box {
-            width: 40px;
-            height: 40px;
-            min-width: 40px;
-            background: var(--accent-glow);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 1rem;
-            transition: 0.3s;
-        }
-        .feature-card:hover .icon-box {
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            color: #fff;
-        }
-        .feature-card h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 2px;
-        }
-        .feature-card p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
+        /* Features */
+        .feature-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .feature-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; align-items: flex-start; gap: 14px; transition: all 0.3s ease; cursor: pointer; }
+        .feature-card:hover { background: var(--bg-3); border-color: var(--border-light); transform: translateX(4px); }
+        .feature-card .icon-box { width: 40px; height: 40px; min-width: 40px; background: var(--accent-glow); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1rem; transition: 0.3s; }
+        .feature-card:hover .icon-box { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: #fff; }
+        .feature-card h4 { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .feature-card p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
 
-        /* ===== ACHIEVEMENT BADGES ===== */
-        .badge-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 16px;
-        }
-        .badge-item {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px 8px;
-            text-align: center;
-            transition: 0.2s;
-        }
-        .badge-item:hover {
-            border-color: var(--border-light);
-        }
-        .badge-item.unlocked {
-            border-color: rgba(255,193,7,0.3);
-            background: rgba(255,193,7,0.05);
-        }
-        .badge-item .emoji {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .badge-item .name {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            line-height: 1.2;
-        }
-        .badge-item.unlocked .name {
-            color: var(--warning);
-        }
+        /* Badges */
+        .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+        .badge-item { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 16px 8px; text-align: center; transition: 0.2s; }
+        .badge-item:hover { border-color: var(--border-light); }
+        .badge-item.unlocked { border-color: rgba(255,193,7,0.3); background: rgba(255,193,7,0.05); }
+        .badge-item .emoji { font-size: 1.8rem; margin-bottom: 6px; display: block; }
+        .badge-item .name { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); line-height: 1.2; }
+        .badge-item.unlocked .name { color: var(--warning); }
 
-        /* ===== HISTORY LIST ===== */
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .history-item {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .history-item .status {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-        }
+        /* History */
+        .history-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+        .history-item { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 12px; }
+        .history-item .status { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
         .history-item .status.success { background: rgba(0,212,170,0.1); color: var(--accent-2); }
         .history-item .status.error { background: rgba(239,68,68,0.1); color: var(--error); }
-        .history-item .details {
-            flex: 1;
-            min-width: 0;
-        }
-        .history-item .url {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .history-item .meta {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            margin-top: 2px;
-        }
+        .history-item .details { flex: 1; min-width: 0; }
+        .history-item .url { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-item .meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
 
-        /* ===== LEADERBOARD ===== */
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .leader-item {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .leader-item .rank {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            width: 32px;
-            text-align: center;
-        }
+        /* Leaderboard */
+        .leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
+        .leader-item { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+        .leader-item .rank { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; width: 32px; text-align: center; }
         .leader-item .rank.gold { color: #ffd700; }
         .leader-item .rank.silver { color: #c0c0c0; }
         .leader-item .rank.bronze { color: #cd7f32; }
-        .leader-item .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            color: var(--text-dim);
-        }
-        .leader-item .info {
-            flex: 1;
-        }
-        .leader-item .name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-        }
-        .leader-item .stats {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-top: 2px;
-        }
+        .leader-item .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-3); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-dim); }
+        .leader-item .info { flex: 1; }
+        .leader-item .name { font-size: 0.9rem; font-weight: 600; color: #fff; }
+        .leader-item .stats { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
 
-        /* ===== TABS ===== */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 4px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 10px 14px;
-            border: none;
-            background: transparent;
-            color: var(--text-dim);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-        }
-        .tab-btn.active {
-            background: var(--accent);
-            color: #fff;
-        }
-        .tab-btn:hover:not(.active) {
-            color: var(--text);
-        }
+        /* Tabs */
+        .tabs { display: flex; gap: 4px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 10px 14px; border: none; background: transparent; color: var(--text-dim); font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; border-radius: 10px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .tab-btn.active { background: var(--accent); color: #fff; }
+        .tab-btn:hover:not(.active) { color: var(--text); }
 
-        /* ===== TAB CONTENT ===== */
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ===== PREMIUM BANNER ===== */
-        .premium-banner {
-            background: linear-gradient(135deg, rgba(255,51,102,0.1), rgba(99,102,241,0.1));
-            border: 1px solid rgba(255,51,102,0.2);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .premium-banner h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 6px;
-        }
-        .premium-banner p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 14px;
-        }
+        /* Premium Banner */
+        .premium-banner { background: linear-gradient(135deg, rgba(255,51,102,0.1), rgba(99,102,241,0.1)); border: 1px solid rgba(255,51,102,0.2); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .premium-banner h3 { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .premium-banner p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; }
 
-        /* ===== FOOTER ===== */
-        .footer {
-            padding: 40px 5% 20px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            background: var(--bg-2);
-            margin-top: 20px;
-        }
-        .footer-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 8px;
-        }
+        /* Footer */
+        .footer { padding: 40px 5% 20px; border-top: 1px solid var(--border); text-align: center; background: var(--bg-2); margin-top: 20px; }
+        .footer-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
         .footer-logo span { color: var(--accent); }
-        .footer-desc {
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            max-width: 350px;
-            margin: 0 auto 16px;
-            line-height: 1.5;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-weight: 500;
-            transition: 0.2s;
-        }
+        .footer-desc { color: var(--text-dim); font-size: 0.8rem; max-width: 350px; margin: 0 auto 16px; line-height: 1.5; }
+        .footer-links { display: flex; justify-content: center; gap: 16px; margin: 12px 0; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; transition: 0.2s; }
         .footer-links a:hover { color: var(--accent); }
-        .footer-copy {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.65rem;
-            color: var(--text-fade);
-            margin-top: 20px;
-            letter-spacing: 1px;
-        }
+        .footer-copy { font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; color: var(--text-fade); margin-top: 20px; letter-spacing: 1px; }
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--bg-3);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-dim);
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
-        /* ===== RESPONSIVE ===== */
-        @media (min-width: 640px) {
-            .feature-grid { grid-template-columns: repeat(2, 1fr); }
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }
-            .download-actions { grid-template-columns: 1fr 1fr; }
-            .btn { width: auto; }
-        }
-
-        /* ===== HIDDEN ===== */
+        /* Responsive */
+        @media (min-width: 640px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } .stats-grid { grid-template-columns: repeat(4, 1fr); } .btn { width: auto; } }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -910,9 +209,7 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-logo">InstaSaver<span>.</span></div>
-        <div class="loading-bar">
-            <div class="loading-bar-fill"></div>
-        </div>
+        <div class="loading-bar"><div class="loading-bar-fill"></div></div>
         <div class="loading-text" id="loading-text">Connecting to bot...</div>
     </div>
 
@@ -922,15 +219,11 @@
     <!-- Telegram User Header -->
     <div class="tg-header" id="tg-header" style="display:none;">
         <div class="tg-user">
-            <div class="tg-avatar" id="tg-avatar">
-                <i class="fa-solid fa-user"></i>
-            </div>
+            <div class="tg-avatar" id="tg-avatar"><i class="fa-solid fa-user"></i></div>
             <div class="tg-info">
                 <h3 id="tg-name">Loading...</h3>
                 <div class="uid" id="tg-uid">ID: ---</div>
-                <div class="tg-premium" id="tg-premium">
-                    <i class="fa-solid fa-circle-notch fa-spin"></i> Checking...
-                </div>
+                <div class="tg-premium" id="tg-premium"><i class="fa-solid fa-circle-notch fa-spin"></i> Checking...</div>
             </div>
         </div>
     </div>
@@ -938,315 +231,116 @@
     <!-- Nav -->
     <nav class="nav">
         <a href="#" class="nav-logo">InstaSaver<span>.</span></a>
-        <div class="nav-status">
-            <span class="dot"></span>
-            <span id="bot-status">Online</span>
-        </div>
+        <div class="nav-status"><span class="dot"></span><span id="bot-status">Online</span></div>
     </nav>
 
     <!-- Hero -->
     <header class="hero">
-        <div class="hero-badge">
-            <span class="pulse"></span>
-            India's First AI Powered Bot
-        </div>
+        <div class="hero-badge"><span class="pulse"></span>India's First AI Powered Bot</div>
         <h1><span class="main">Control Center</span></h1>
-        <p class="hero-desc">
-            Manage your bot settings, download Instagram content, and track your stats — all from one place.
-        </p>
+        <p class="hero-desc">Manage your bot settings, download Instagram content, and track your stats — all from one place.</p>
     </header>
 
     <!-- Main Tabs -->
     <div class="section" style="padding-top:0;">
         <div class="tabs">
-            <button class="tab-btn active" data-tab="download">
-                <i class="fa-solid fa-download"></i> Download
-            </button>
-            <button class="tab-btn" data-tab="stats">
-                <i class="fa-solid fa-chart-simple"></i> Stats
-            </button>
-            <button class="tab-btn" data-tab="settings">
-                <i class="fa-solid fa-gear"></i> Settings
-            </button>
-            <button class="tab-btn" data-tab="more">
-                <i class="fa-solid fa-grid-2"></i> More
-            </button>
+            <button class="tab-btn active" data-tab="download"><i class="fa-solid fa-download"></i> Download</button>
+            <button class="tab-btn" data-tab="stats"><i class="fa-solid fa-chart-simple"></i> Stats</button>
+            <button class="tab-btn" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+            <button class="tab-btn" data-tab="more"><i class="fa-solid fa-grid-2"></i> More</button>
         </div>
 
         <!-- DOWNLOAD TAB -->
         <div class="tab-content active" id="tab-download">
-            <!-- Premium Banner (shown if not premium) -->
             <div class="premium-banner" id="premium-banner">
                 <h3><i class="fa-solid fa-crown" style="color: var(--accent);"></i> Unlock Full Power</h3>
                 <p>Upgrade to premium for unlimited downloads, MP3 extraction, and priority processing.</p>
-                <a href="https://t.me/codeiox_bot?start=plan" class="btn btn-primary" target="_blank">
-                    <i class="fa-solid fa-crown"></i> Upgrade ₹3/day
-                </a>
+                <a href="https://t.me/codeiox_bot?start=plan" class="btn btn-primary" target="_blank"><i class="fa-solid fa-crown"></i> Upgrade ₹3/day</a>
             </div>
-
-            <!-- Download Input -->
             <div class="download-section">
                 <div class="download-input-wrap">
-                    <input type="text" class="download-input" id="ig-url" 
-                           placeholder="Paste Instagram URL here... (Reel, Post, Story)"
-                           autocomplete="off">
+                    <input type="text" class="download-input" id="ig-url" placeholder="Paste Instagram URL here... (Reel, Post, Story)" autocomplete="off">
                 </div>
                 <div class="download-actions">
-                    <button class="download-btn video" id="btn-video" onclick="triggerDownload('video')">
-                        <i class="fa-solid fa-video"></i>
-                        <span>Get Video</span>
-                    </button>
-                    <button class="download-btn audio" id="btn-audio" onclick="triggerDownload('audio')">
-                        <i class="fa-solid fa-music"></i>
-                        <span>Get Audio</span>
-                    </button>
+                    <button class="download-btn video" id="btn-video" onclick="triggerDownload('video')"><i class="fa-solid fa-video"></i><span>Get Video</span></button>
+                    <button class="download-btn audio" id="btn-audio" onclick="triggerDownload('audio')"><i class="fa-solid fa-music"></i><span>Get Audio</span></button>
                 </div>
             </div>
-
-            <!-- Quick Stats -->
             <div class="stats-grid" id="user-stats">
-                <div class="stat-card">
-                    <div class="value accent" id="stat-downloads">0</div>
-                    <div class="label">Downloads</div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="stat-media">0</div>
-                    <div class="label">Media</div>
-                </div>
-                <div class="stat-card">
-                    <div class="value success" id="stat-trial">3</div>
-                    <div class="label">Trial Left</div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="stat-chats">20</div>
-                    <div class="label">AI Chats</div>
-                </div>
+                <div class="stat-card"><div class="value accent" id="stat-downloads">0</div><div class="label">Downloads</div></div>
+                <div class="stat-card"><div class="value" id="stat-media">0</div><div class="label">Media</div></div>
+                <div class="stat-card"><div class="value success" id="stat-trial">3</div><div class="label">Trial Left</div></div>
+                <div class="stat-card"><div class="value" id="stat-chats">20</div><div class="label">AI Chats</div></div>
             </div>
         </div>
 
         <!-- STATS TAB -->
         <div class="tab-content" id="tab-stats">
-            <!-- Bot Stats -->
             <div class="section-header" style="margin-bottom: 20px;">
                 <div class="section-label">Real-Time</div>
                 <h2 class="section-title" style="font-size: 1.4rem;">Bot Statistics</h2>
             </div>
             <div class="stats-grid" id="bot-stats">
-                <div class="stat-card">
-                    <div class="value accent" id="bot-users">0</div>
-                    <div class="label">Total Users</div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="bot-downloads">0</div>
-                    <div class="label">Downloads</div>
-                </div>
-                <div class="stat-card">
-                    <div class="value success" id="bot-media">0</div>
-                    <div class="label">Media Sent</div>
-                </div>
-                <div class="stat-card">
-                    <div class="value" id="bot-premium">0</div>
-                    <div class="label">Premium</div>
-                </div>
+                <div class="stat-card"><div class="value accent" id="bot-users">0</div><div class="label">Total Users</div></div>
+                <div class="stat-card"><div class="value" id="bot-downloads">0</div><div class="label">Downloads</div></div>
+                <div class="stat-card"><div class="value success" id="bot-media">0</div><div class="label">Media Sent</div></div>
+                <div class="stat-card"><div class="value" id="bot-premium">0</div><div class="label">Premium</div></div>
             </div>
-
-            <!-- Leaderboard -->
             <div class="section-header" style="margin-top: 30px;">
                 <div class="section-label">Global</div>
                 <h2 class="section-title" style="font-size: 1.4rem;">Leaderboard</h2>
             </div>
             <div class="leaderboard-list" id="leaderboard-list">
-                <div class="leader-item">
-                    <div class="rank">🥇</div>
-                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
-                    <div class="info">
-                        <div class="name">Loading...</div>
-                        <div class="stats">Please wait</div>
-                    </div>
-                </div>
+                <div class="leader-item"><div class="rank">🥇</div><div class="avatar"><i class="fa-solid fa-user"></i></div><div class="info"><div class="name">Loading...</div><div class="stats">Please wait</div></div></div>
             </div>
-
-            <!-- History -->
             <div class="section-header" style="margin-top: 30px;">
                 <div class="section-label">Personal</div>
                 <h2 class="section-title" style="font-size: 1.4rem;">Your History</h2>
             </div>
             <div class="history-list" id="history-list">
-                <div class="history-item">
-                    <div class="status success"><i class="fa-solid fa-check"></i></div>
-                    <div class="details">
-                        <div class="url">Loading your history...</div>
-                        <div class="meta">Please wait</div>
-                    </div>
-                </div>
+                <div class="history-item"><div class="status success"><i class="fa-solid fa-info"></i></div><div class="details"><div class="url">Loading your history...</div><div class="meta">Please wait</div></div></div>
             </div>
         </div>
 
         <!-- SETTINGS TAB -->
         <div class="tab-content" id="tab-settings">
-            <div class="section-header" style="margin-bottom: 20px;">
-                <div class="section-label">Configure</div>
-                <h2 class="section-title" style="font-size: 1.4rem;">Bot Settings</h2>
-            </div>
-
-            <!-- Theme -->
+            <div class="section-header" style="margin-bottom: 20px;"><div class="section-label">Configure</div><h2 class="section-title" style="font-size: 1.4rem;">Bot Settings</h2></div>
             <div class="select-group">
                 <label><i class="fa-solid fa-palette"></i> Theme</label>
                 <select class="custom-select" id="setting-theme" onchange="updateSetting('theme', this.value)">
-                    <option value="minimal">📱 Minimal (Default)</option>
-                    <option value="romantic">💖 Romantic</option>
-                    <option value="dark">🌙 Dark</option>
-                    <option value="cyber">⚡ Cyber</option>
+                    <option value="minimal">📱 Minimal (Default)</option><option value="romantic">💖 Romantic</option><option value="dark">🌙 Dark</option><option value="cyber">⚡ Cyber</option>
                 </select>
             </div>
-
-            <!-- Language -->
             <div class="select-group">
                 <label><i class="fa-solid fa-globe"></i> Language</label>
                 <select class="custom-select" id="setting-language" onchange="updateSetting('language', this.value)">
-                    <option value="hinglish">🇮🇳 Hinglish</option>
-                    <option value="en">🇬🇧 English</option>
-                    <option value="hi">🇮🇳 Hindi</option>
+                    <option value="hinglish">🇮🇳 Hinglish</option><option value="en">🇬🇧 English</option><option value="hi">🇮🇳 Hindi</option>
                 </select>
             </div>
-
-            <!-- Toggles -->
             <div class="toggle-group">
-                <div class="toggle-item">
-                    <div class="info">
-                        <h4>Auto-Delete</h4>
-                        <p>Delete media after 24h</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle-autodelete" onchange="updateToggle('autodelete', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="toggle-item">
-                    <div class="info">
-                        <h4>HD Downloads</h4>
-                        <p>Always download in HD</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle-hd" checked disabled>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="toggle-item">
-                    <div class="info">
-                        <h4>Neiko AI</h4>
-                        <p>Enable AI chat assistant</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle-neiko" checked disabled>
-                        <span class="slider"></span>
-                    </label>
-                </div>
+                <div class="toggle-item"><div class="info"><h4>Auto-Delete</h4><p>Delete media after 24h</p></div><label class="switch"><input type="checkbox" id="toggle-autodelete" onchange="updateToggle('autodelete', this.checked)"><span class="slider"></span></label></div>
+                <div class="toggle-item"><div class="info"><h4>HD Downloads</h4><p>Always download in HD</p></div><label class="switch"><input type="checkbox" id="toggle-hd" checked disabled><span class="slider"></span></label></div>
+                <div class="toggle-item"><div class="info"><h4>Neiko AI</h4><p>Enable AI chat assistant</p></div><label class="switch"><input type="checkbox" id="toggle-neiko" checked disabled><span class="slider"></span></label></div>
             </div>
-
-            <!-- Neiko Settings -->
-            <div class="section-header" style="margin-top: 30px;">
-                <div class="section-label">AI Persona</div>
-                <h2 class="section-title" style="font-size: 1.4rem;">Neiko Settings</h2>
-            </div>
-
-            <div class="select-group">
-                <label><i class="fa-solid fa-venus-mars"></i> Gender Preference</label>
-                <select class="custom-select" id="neiko-gender" onchange="updateNeikoSetting('gender', this.value)">
-                    <option value="other">🤷 Other / Don't specify</option>
-                    <option value="male">👨 Male</option>
-                    <option value="female">👩 Female</option>
-                </select>
-            </div>
-
-            <div class="select-group">
-                <label><i class="fa-solid fa-masks-theater"></i> AI Mode</label>
-                <select class="custom-select" id="neiko-mode" onchange="updateNeikoSetting('mode', this.value)">
-                    <option value="off">📴 Off (Direct)</option>
-                    <option value="cute">🎀 Cute</option>
-                    <option value="romantic">💖 Romantic</option>
-                    <option value="flirt">🔥 Flirty</option>
-                    <option value="cool">😎 Cool</option>
-                    <option value="cute_romantic">💕 Cute + Romantic</option>
-                </select>
-            </div>
-
-            <div class="select-group">
-                <label><i class="fa-solid fa-language"></i> Neiko Language</label>
-                <select class="custom-select" id="neiko-language" onchange="updateNeikoSetting('language', this.value)">
-                    <option value="hinglish">🇮🇳 Hinglish</option>
-                    <option value="en">🇬🇧 English</option>
-                    <option value="hi">🇮🇳 Hindi</option>
-                </select>
-            </div>
-
-            <div class="select-group">
-                <label><i class="fa-solid fa-sun"></i> Morning Time</label>
-                <input type="time" class="custom-select" id="neiko-morning" 
-                       style="font-family: 'Space Grotesk', monospace;"
-                       onchange="updateNeikoSetting('morning_time', this.value)">
-            </div>
+            <div class="section-header" style="margin-top: 30px;"><div class="section-label">AI Persona</div><h2 class="section-title" style="font-size: 1.4rem;">Neiko Settings</h2></div>
+            <div class="select-group"><label><i class="fa-solid fa-venus-mars"></i> Gender Preference</label><select class="custom-select" id="neiko-gender" onchange="updateNeikoSetting('gender', this.value)"><option value="other">🤷 Other</option><option value="male">👨 Male</option><option value="female">👩 Female</option></select></div>
+            <div class="select-group"><label><i class="fa-solid fa-masks-theater"></i> AI Mode</label><select class="custom-select" id="neiko-mode" onchange="updateNeikoSetting('mode', this.value)"><option value="off">📴 Off</option><option value="cute">🎀 Cute</option><option value="romantic">💖 Romantic</option><option value="flirt">🔥 Flirty</option><option value="cool">😎 Cool</option><option value="cute_romantic">💕 Cute + Romantic</option></select></div>
+            <div class="select-group"><label><i class="fa-solid fa-language"></i> Neiko Language</label><select class="custom-select" id="neiko-language" onchange="updateNeikoSetting('language', this.value)"><option value="hinglish">🇮🇳 Hinglish</option><option value="en">🇬🇧 English</option><option value="hi">🇮🇳 Hindi</option></select></div>
+            <div class="select-group"><label><i class="fa-solid fa-sun"></i> Morning Time</label><input type="time" class="custom-select" id="neiko-morning" style="font-family: 'Space Grotesk', monospace;" onchange="updateNeikoSetting('morning_time', this.value)"></div>
         </div>
 
         <!-- MORE TAB -->
         <div class="tab-content" id="tab-more">
-            <!-- Achievements -->
-            <div class="section-header" style="margin-bottom: 20px;">
-                <div class="section-label">Rewards</div>
-                <h2 class="section-title" style="font-size: 1.4rem;">Achievements</h2>
-            </div>
-            <div class="badge-grid" id="achievements-grid">
-                <!-- Filled by JS -->
-            </div>
-
-            <!-- Features -->
-            <div class="section-header" style="margin-top: 30px;">
-                <div class="section-label">Features</div>
-                <h2 class="section-title" style="font-size: 1.4rem;">Quick Access</h2>
-            </div>
+            <div class="section-header" style="margin-bottom: 20px;"><div class="section-label">Rewards</div><h2 class="section-title" style="font-size: 1.4rem;">Achievements</h2></div>
+            <div class="badge-grid" id="achievements-grid"></div>
+            <div class="section-header" style="margin-top: 30px;"><div class="section-label">Features</div><h2 class="section-title" style="font-size: 1.4rem;">Quick Access</h2></div>
             <div class="feature-grid">
-                <div class="feature-card" onclick="openBotCommand('/history')">
-                    <div class="icon-box"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                    <div>
-                        <h4>History</h4>
-                        <p>View all your past downloads</p>
-                    </div>
-                </div>
-                <div class="feature-card" onclick="openBotCommand('/favorites')">
-                    <div class="icon-box"><i class="fa-solid fa-bookmark"></i></div>
-                    <div>
-                        <h4>Favorites</h4>
-                        <p>Your saved Instagram posts</p>
-                    </div>
-                </div>
-                <div class="feature-card" onclick="openBotCommand('/achievements')">
-                    <div class="icon-box"><i class="fa-solid fa-trophy"></i></div>
-                    <div>
-                        <h4>Achievements</h4>
-                        <p>Check your badges & progress</p>
-                    </div>
-                </div>
-                <div class="feature-card" onclick="openBotCommand('/leaderboard')">
-                    <div class="icon-box"><i class="fa-solid fa-ranking-star"></i></div>
-                    <div>
-                        <h4>Leaderboard</h4>
-                        <p>See top downloaders globally</p>
-                    </div>
-                </div>
-                <div class="feature-card" onclick="openBotCommand('/neiko')">
-                    <div class="icon-box"><i class="fa-solid fa-robot"></i></div>
-                    <div>
-                        <h4>Neiko AI</h4>
-                        <p>Chat with your AI assistant</p>
-                    </div>
-                </div>
-                <div class="feature-card" onclick="openBotCommand('/help')">
-                    <div class="icon-box"><i class="fa-solid fa-circle-question"></i></div>
-                    <div>
-                        <h4>Help & Commands</h4>
-                        <p>Full list of bot commands</p>
-                    </div>
-                </div>
+                <div class="feature-card" onclick="openBotCommand('/history')"><div class="icon-box"><i class="fa-solid fa-clock-rotate-left"></i></div><div><h4>History</h4><p>View all your past downloads</p></div></div>
+                <div class="feature-card" onclick="openBotCommand('/favorites')"><div class="icon-box"><i class="fa-solid fa-bookmark"></i></div><div><h4>Favorites</h4><p>Your saved Instagram posts</p></div></div>
+                <div class="feature-card" onclick="openBotCommand('/achievements')"><div class="icon-box"><i class="fa-solid fa-trophy"></i></div><div><h4>Achievements</h4><p>Check your badges & progress</p></div></div>
+                <div class="feature-card" onclick="openBotCommand('/leaderboard')"><div class="icon-box"><i class="fa-solid fa-ranking-star"></i></div><div><h4>Leaderboard</h4><p>See top downloaders globally</p></div></div>
+                <div class="feature-card" onclick="openBotCommand('/neiko')"><div class="icon-box"><i class="fa-solid fa-robot"></i></div><div><h4>Neiko AI</h4><p>Chat with your AI assistant</p></div></div>
+                <div class="feature-card" onclick="openBotCommand('/help')"><div class="icon-box"><i class="fa-solid fa-circle-question"></i></div><div><h4>Help & Commands</h4><p>Full list of bot commands</p></div></div>
             </div>
         </div>
     </div>
@@ -1254,26 +348,17 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-logo">InstaSaver<span>.</span></div>
-        <p class="footer-desc">
-            <strong>India's First AI Powered Bot.</strong> Built with precision by <strong>@code_iox</strong>.
-        </p>
-        <div class="footer-links">
-            <a href="https://t.me/codeiox_bot" target="_blank">Bot</a>
-            <a href="https://t.me/code_iox" target="_blank">Developer</a>
-            <a href="https://t.me/codeiox_bot?start=plan" target="_blank">Premium</a>
-        </div>
-        <div class="footer-copy">
-            v3.1.5 // <a href="https://t.me/code_iox" target="_blank">@code_iox</a> // <a href="https://t.me/codeiox_bot" target="_blank">@codeiox_bot</a>
-        </div>
+        <p class="footer-desc"><strong>India's First AI Powered Bot.</strong> Built with precision by <strong>@code_iox</strong>.</p>
+        <div class="footer-links"><a href="https://t.me/codeiox_bot" target="_blank">Bot</a><a href="https://t.me/code_iox" target="_blank">Developer</a><a href="https://t.me/codeiox_bot?start=plan" target="_blank">Premium</a></div>
+        <div class="footer-copy">v3.1.5 // <a href="https://t.me/code_iox" target="_blank">@code_iox</a> // <a href="https://t.me/codeiox_bot" target="_blank">@codeiox_bot</a></div>
     </footer>
 
     <script>
         // ═══════════════════════════════════════════════════════════════
-        // CONFIGURATION
+        // CONFIG — CHANGE THIS TO YOUR BOT URL
         // ═══════════════════════════════════════════════════════════════
         const CONFIG = {
-            // Your bot's API endpoint (Render/Server URL)
-            API_BASE: 'https://your-bot.onrender.com',  // <-- CHANGE THIS TO YOUR BOT URL
+            API_BASE: 'https://your-bot.onrender.com',  // <-- CHANGE THIS
             BOT_USERNAME: 'codeiox_bot',
             OWNER_USERNAME: 'code_iox'
         };
@@ -1284,64 +369,34 @@
         let tg = window.Telegram.WebApp;
         let currentUser = null;
         let isAuthenticated = false;
-
-        tg.ready();
-        tg.expand();
-        tg.setHeaderColor('#0a0a0f');
-        tg.setBackgroundColor('#0a0a0f');
+        tg.ready(); tg.expand();
+        tg.setHeaderColor('#0a0a0f'); tg.setBackgroundColor('#0a0a0f');
 
         // ═══════════════════════════════════════════════════════════════
-        // TOAST SYSTEM
+        // TOAST
         // ═══════════════════════════════════════════════════════════════
         function showToast(message, type = 'info', duration = 3000) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
-            const icons = {
-                success: '<i class="fa-solid fa-check-circle"></i>',
-                error: '<i class="fa-solid fa-circle-xmark"></i>',
-                warning: '<i class="fa-solid fa-triangle-exclamation"></i>',
-                info: '<i class="fa-solid fa-circle-info"></i>'
-            };
-            
+            const icons = { success: '<i class="fa-solid fa-check-circle"></i>', error: '<i class="fa-solid fa-circle-xmark"></i>', warning: '<i class="fa-solid fa-triangle-exclamation"></i>', info: '<i class="fa-solid fa-circle-info"></i>' };
             toast.innerHTML = `${icons[type]} <span>${message}</span>`;
             container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.add('toast-out');
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
+            setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => toast.remove(), 300); }, duration);
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // API HELPERS
+        // API
         // ═══════════════════════════════════════════════════════════════
         async function apiRequest(endpoint, options = {}) {
             const initData = tg.initData || '';
-            
-            const defaults = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Telegram-Init-Data': initData
-                }
-            };
-            
+            const defaults = { headers: { 'Content-Type': 'application/json', 'X-Telegram-Init-Data': initData } };
             try {
-                const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, {
-                    ...defaults,
-                    ...options,
-                    headers: {
-                        ...defaults.headers,
-                        ...(options.headers || {})
-                    }
-                });
-                
+                const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, { ...defaults, ...options, headers: { ...defaults.headers, ...(options.headers || {}) } });
                 if (!response.ok) {
                     const error = await response.json().catch(() => ({}));
                     throw new Error(error.error || `HTTP ${response.status}`);
                 }
-                
                 return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
@@ -1351,63 +406,36 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // AUTHENTICATION
+        // AUTH
         // ═══════════════════════════════════════════════════════════════
         async function authenticate() {
             const loadingText = document.getElementById('loading-text');
-            
             try {
                 loadingText.textContent = 'Validating Telegram auth...';
-                
-                const result = await apiRequest('/api/auth', {
-                    method: 'POST',
-                    body: JSON.stringify({ init_data: tg.initData })
-                });
-                
+                const result = await apiRequest('/api/auth', { method: 'POST', body: JSON.stringify({ init_data: tg.initData }) });
                 if (result.success) {
                     currentUser = result.user;
                     isAuthenticated = true;
-                    
-                    // Update UI
                     updateUserHeader(result.user);
                     updateUserStats(result.user);
                     updateSettingsUI(result.user, result.neiko_settings);
-                    
                     loadingText.textContent = 'Loading your data...';
-                    
-                    // Load additional data
-                    await Promise.all([
-                        loadBotStats(),
-                        loadLeaderboard(),
-                        loadHistory(),
-                        loadAchievements()
-                    ]);
-                    
+                    await Promise.all([loadBotStats(), loadLeaderboard(), loadHistory(), loadAchievements()]);
                     loadingText.textContent = 'Ready!';
-                    
-                    setTimeout(() => {
-                        document.getElementById('loading-screen').classList.add('hidden');
-                    }, 500);
-                    
+                    setTimeout(() => document.getElementById('loading-screen').classList.add('hidden'), 500);
                     showToast(`Welcome, ${result.user.first_name}!`, 'success');
-                    
-                    // Hide premium banner if user is premium
                     if (result.user.is_premium || result.user.is_admin || result.user.is_vip) {
                         document.getElementById('premium-banner').classList.add('hidden');
                     }
-                    
                     return true;
                 }
             } catch (error) {
                 console.error('Auth failed:', error);
                 loadingText.textContent = 'Auth failed. Using demo mode...';
-                
-                // Demo mode
                 setTimeout(() => {
                     document.getElementById('loading-screen').classList.add('hidden');
                     showToast('Running in demo mode. Open via Telegram bot for full access.', 'warning', 5000);
                 }, 1000);
-                
                 return false;
             }
         }
@@ -1419,48 +447,28 @@
             document.getElementById('tg-header').style.display = 'block';
             document.getElementById('tg-name').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             document.getElementById('tg-uid').textContent = `ID: ${user.id}`;
-            
             const badge = document.getElementById('tg-premium');
-            if (user.is_admin) {
-                badge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Admin';
-                badge.className = 'tg-premium admin';
-            } else if (user.is_vip) {
-                badge.innerHTML = '<i class="fa-solid fa-heart"></i> VIP';
-                badge.className = 'tg-premium active';
-            } else if (user.is_premium) {
-                badge.innerHTML = '<i class="fa-solid fa-crown"></i> Premium';
-                badge.className = 'tg-premium active';
-            } else {
-                badge.innerHTML = '<i class="fa-solid fa-user"></i> Free User';
-                badge.className = 'tg-premium';
-            }
-            
-            // Avatar
-            if (tg.initDataUnsafe?.user?.photo_url) {
-                document.getElementById('tg-avatar').innerHTML = 
-                    `<img src="${tg.initDataUnsafe.user.photo_url}" alt="avatar">`;
-            }
+            if (user.is_admin) { badge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Admin'; badge.className = 'tg-premium admin'; }
+            else if (user.is_vip) { badge.innerHTML = '<i class="fa-solid fa-heart"></i> VIP'; badge.className = 'tg-premium active'; }
+            else if (user.is_premium) { badge.innerHTML = '<i class="fa-solid fa-crown"></i> Premium'; badge.className = 'tg-premium active'; }
+            else { badge.innerHTML = '<i class="fa-solid fa-user"></i> Free User'; badge.className = 'tg-premium'; }
+            if (tg.initDataUnsafe?.user?.photo_url) document.getElementById('tg-avatar').innerHTML = `<img src="${tg.initDataUnsafe.user.photo_url}" alt="avatar">`;
         }
-
         function updateUserStats(user) {
             document.getElementById('stat-downloads').textContent = user.download_count || 0;
             document.getElementById('stat-media').textContent = user.total_media || 0;
             document.getElementById('stat-trial').textContent = user.trial_remaining || 0;
-            document.getElementById('stat-chats').textContent = '20'; // Daily limit
+            document.getElementById('stat-chats').textContent = '20';
         }
-
         function updateSettingsUI(user, neiko) {
             document.getElementById('setting-theme').value = user.theme || 'minimal';
             document.getElementById('setting-language').value = user.language || 'hinglish';
             document.getElementById('toggle-autodelete').checked = user.autodelete || false;
-            
             if (neiko) {
                 document.getElementById('neiko-gender').value = neiko.gender || 'other';
                 document.getElementById('neiko-mode').value = neiko.mode || 'off';
                 document.getElementById('neiko-language').value = neiko.language || 'hinglish';
-                if (neiko.morning_time) {
-                    document.getElementById('neiko-morning').value = neiko.morning_time;
-                }
+                if (neiko.morning_time) document.getElementById('neiko-morning').value = neiko.morning_time;
             }
         }
 
@@ -1478,78 +486,41 @@
                     document.getElementById('bot-premium').textContent = formatNumber(s.total_premium);
                     document.getElementById('bot-status').textContent = s.status === 'online' ? 'Online' : 'Offline';
                 }
-            } catch (e) {
-                console.error('Stats load failed:', e);
-            }
+            } catch (e) { console.error('Stats load failed:', e); }
         }
-
         async function loadLeaderboard() {
             try {
                 const result = await apiRequest('/api/leaderboard');
                 if (result.success) {
                     const container = document.getElementById('leaderboard-list');
                     container.innerHTML = '';
-                    
-                    const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
-                    const colors = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
-                    
+                    const medals = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
+                    const colors = ['gold','silver','bronze','','','','','','',''];
                     result.leaderboard.forEach((item, i) => {
-                        const div = document.createElement('div');
-                        div.className = 'leader-item';
-                        div.innerHTML = `
-                            <div class="rank ${colors[i] || ''}">${medals[i] || i + 1}</div>
-                            <div class="avatar"><i class="fa-solid fa-user"></i></div>
-                            <div class="info">
-                                <div class="name">${escapeHtml(item.name)} ${item.username ? '@' + escapeHtml(item.username) : ''}</div>
-                                <div class="stats">${item.downloads} downloads • ${item.media} media</div>
-                            </div>
-                        `;
+                        const div = document.createElement('div'); div.className = 'leader-item';
+                        div.innerHTML = `<div class="rank ${colors[i]||''}">${medals[i]||i+1}</div><div class="avatar"><i class="fa-solid fa-user"></i></div><div class="info"><div class="name">${escapeHtml(item.name)} ${item.username?'@'+escapeHtml(item.username):''}</div><div class="stats">${item.downloads} downloads • ${item.media} media</div></div>`;
                         container.appendChild(div);
                     });
                 }
-            } catch (e) {
-                console.error('Leaderboard load failed:', e);
-            }
+            } catch (e) { console.error('Leaderboard load failed:', e); }
         }
-
         async function loadHistory() {
             if (!currentUser) return;
             try {
                 const result = await apiRequest(`/api/history/${currentUser.id}?limit=10`);
+                const container = document.getElementById('history-list');
                 if (result.success && result.history.length > 0) {
-                    const container = document.getElementById('history-list');
                     container.innerHTML = '';
-                    
                     result.history.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'history-item';
-                        div.innerHTML = `
-                            <div class="status ${item.success ? 'success' : 'error'}">
-                                <i class="fa-solid fa-${item.success ? 'check' : 'xmark'}"></i>
-                            </div>
-                            <div class="details">
-                                <div class="url">${escapeHtml(item.url)}</div>
-                                <div class="meta">${item.media_count} items • ${item.timestamp}</div>
-                            </div>
-                        `;
+                        const div = document.createElement('div'); div.className = 'history-item';
+                        div.innerHTML = `<div class="status ${item.success?'success':'error'}"><i class="fa-solid fa-${item.success?'check':'xmark'}"></i></div><div class="details"><div class="url">${escapeHtml(item.url)}</div><div class="meta">${item.media_count} items • ${item.timestamp}</div></div>`;
                         container.appendChild(div);
                     });
                 } else {
-                    document.getElementById('history-list').innerHTML = `
-                        <div class="history-item">
-                            <div class="status success"><i class="fa-solid fa-info"></i></div>
-                            <div class="details">
-                                <div class="url">No downloads yet</div>
-                                <div class="meta">Start downloading from the Download tab!</div>
-                            </div>
-                        </div>
-                    `;
+                    container.innerHTML = '<div class="history-item"><div class="status success"><i class="fa-solid fa-info"></i></div><div class="details"><div class="url">No downloads yet</div><div class="meta">Start downloading from the Download tab!</div></div></div>';
                 }
-            } catch (e) {
-                console.error('History load failed:', e);
-            }
+            } catch (e) { console.error('History load failed:', e); }
         }
-
         async function loadAchievements() {
             if (!currentUser) return;
             try {
@@ -1557,20 +528,13 @@
                 if (result.success) {
                     const container = document.getElementById('achievements-grid');
                     container.innerHTML = '';
-                    
                     result.achievements.forEach(ach => {
-                        const div = document.createElement('div');
-                        div.className = `badge-item ${ach.unlocked ? 'unlocked' : ''}`;
-                        div.innerHTML = `
-                            <span class="emoji">${ach.unlocked ? '✨' : '🔒'}</span>
-                            <div class="name">${escapeHtml(ach.name)}</div>
-                        `;
+                        const div = document.createElement('div'); div.className = `badge-item ${ach.unlocked?'unlocked':''}`;
+                        div.innerHTML = `<span class="emoji">${ach.unlocked?'✨':'🔒'}</span><div class="name">${escapeHtml(ach.name)}</div>`;
                         container.appendChild(div);
                     });
                 }
-            } catch (e) {
-                console.error('Achievements load failed:', e);
-            }
+            } catch (e) { console.error('Achievements load failed:', e); }
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -1579,93 +543,39 @@
         async function triggerDownload(action) {
             const urlInput = document.getElementById('ig-url');
             const url = urlInput.value.trim();
-            
-            if (!url) {
-                showToast('Please paste an Instagram URL first!', 'warning');
-                urlInput.focus();
-                return;
-            }
-            
-            if (!url.match(/instagram\.com|instagr\.am/i)) {
-                showToast('Please enter a valid Instagram URL!', 'error');
-                return;
-            }
-            
+            if (!url) { showToast('Please paste an Instagram URL first!', 'warning'); urlInput.focus(); return; }
+            if (!url.match(/instagram\.com|instagr\.am/i)) { showToast('Please enter a valid Instagram URL!', 'error'); return; }
             const btnVideo = document.getElementById('btn-video');
             const btnAudio = document.getElementById('btn-audio');
-            
-            btnVideo.disabled = true;
-            btnAudio.disabled = true;
-            
+            btnVideo.disabled = true; btnAudio.disabled = true;
             try {
-                showToast(`${action === 'video' ? '📥 Video' : '🎵 Audio'} download started! Check your Telegram DM.`, 'info');
-                
-                const result = await apiRequest('/api/download', {
-                    method: 'POST',
-                    body: JSON.stringify({ url, action })
-                });
-                
+                showToast(`${action==='video'?'📥 Video':'🎵 Audio'} download started! Check your Telegram DM.`, 'info');
+                const result = await apiRequest('/api/download', { method: 'POST', body: JSON.stringify({ url, action }) });
                 if (result.success) {
                     showToast(result.message || 'Download sent to your DM!', 'success');
                     urlInput.value = '';
-                    
-                    // Refresh stats
-                    if (currentUser) {
-                        currentUser.download_count = (currentUser.download_count || 0) + 1;
-                        updateUserStats(currentUser);
-                    }
+                    if (currentUser) { currentUser.download_count = (currentUser.download_count||0)+1; updateUserStats(currentUser); }
                 }
             } catch (error) {
                 if (error.message.includes('Premium') || error.message.includes('403')) {
                     showToast('Premium required! Tap Upgrade button.', 'warning', 5000);
                     document.getElementById('premium-banner').classList.remove('hidden');
-                } else {
-                    showToast(error.message || 'Download failed', 'error');
-                }
-            } finally {
-                btnVideo.disabled = false;
-                btnAudio.disabled = false;
-            }
+                } else { showToast(error.message || 'Download failed', 'error'); }
+            } finally { btnVideo.disabled = false; btnAudio.disabled = false; }
         }
-
         async function updateSetting(key, value) {
-            if (!currentUser) {
-                showToast('Please authenticate first', 'warning');
-                return;
-            }
-            
+            if (!currentUser) { showToast('Please authenticate first', 'warning'); return; }
             try {
-                const result = await apiRequest(`/api/settings/${currentUser.id}`, {
-                    method: 'POST',
-                    body: JSON.stringify({ [key]: value })
-                });
-                
-                if (result.success) {
-                    showToast('Setting saved!', 'success');
-                    currentUser[key] = value;
-                }
-            } catch (e) {
-                showToast('Failed to save setting', 'error');
-            }
+                const result = await apiRequest(`/api/settings/${currentUser.id}`, { method: 'POST', body: JSON.stringify({ [key]: value }) });
+                if (result.success) { showToast('Setting saved!', 'success'); currentUser[key] = value; }
+            } catch (e) { showToast('Failed to save setting', 'error'); }
         }
-
-        async function updateToggle(key, value) {
-            await updateSetting(key, value);
-        }
-
+        async function updateToggle(key, value) { await updateSetting(key, value); }
         async function updateNeikoSetting(key, value) {
             if (!currentUser) return;
-            
-            const mapping = {
-                'gender': 'neiko_gender',
-                'mode': 'neiko_mode',
-                'language': 'neiko_language',
-                'morning_time': 'morning_time'
-            };
-            
+            const mapping = { 'gender': 'neiko_gender', 'mode': 'neiko_mode', 'language': 'neiko_language', 'morning_time': 'morning_time' };
             await updateSetting(mapping[key] || key, value);
         }
-
         function openBotCommand(command) {
             const url = `https://t.me/${CONFIG.BOT_USERNAME}?start=${command.replace('/', '')}`;
             tg.openTelegramLink(url);
@@ -1677,29 +587,24 @@
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabId = btn.dataset.tab;
-                
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
                 btn.classList.add('active');
                 document.getElementById(`tab-${tabId}`).classList.add('active');
             });
         });
 
         // ═══════════════════════════════════════════════════════════════
-        // UTILITIES
+        // UTILS
         // ═══════════════════════════════════════════════════════════════
         function formatNumber(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num/1000).toFixed(1) + 'K';
             return num.toString();
         }
-
         function escapeHtml(text) {
             if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+            const div = document.createElement('div'); div.textContent = text; return div.innerHTML;
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -1707,13 +612,7 @@
         // ═══════════════════════════════════════════════════════════════
         document.addEventListener('DOMContentLoaded', () => {
             authenticate();
-            
-            // Refresh stats every 30 seconds
-            setInterval(() => {
-                if (isAuthenticated) {
-                    loadBotStats();
-                }
-            }, 30000);
+            setInterval(() => { if (isAuthenticated) loadBotStats(); }, 30000);
         });
     </script>
 </body>
