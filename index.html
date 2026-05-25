@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>InstaSaver Pro — India's First AI Powered Bot</title>
+    <title>InstaSaver Pro — AI Powered Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -18,17 +18,14 @@
             --text: #f0f0f5;
             --text-secondary: #9a9aa8;
             --text-dim: #555560;
-            --text-fade: #2a2a35;
             --accent: #ff3366;
             --accent-light: #ff5588;
             --accent-2: #00d4aa;
             --accent-3: #6366f1;
             --accent-glow: rgba(255,51,102,0.15);
         }
-
         * { margin:0; padding:0; box-sizing:border-box; }
         html { scroll-behavior:smooth; }
-        
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
@@ -38,104 +35,81 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* ===== TELEGRAM WEB APP HEADER ===== */
-        .tg-header {
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
-            padding: 20px;
-            border-radius: 0 0 24px 24px;
+        /* ===== USER HEADER ===== */
+        .user-header {
+            background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(99,102,241,0.15));
+            padding: 24px 20px;
+            border-radius: 0 0 28px 28px;
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
-        .tg-header::before {
+        .user-header::before {
             content: '';
             position: absolute;
-            top: -50%; right: -20%;
-            width: 200px; height: 200px;
-            background: rgba(255,255,255,0.1);
+            top: -60px; right: -30px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(255,51,102,0.15), transparent 70%);
             border-radius: 50%;
         }
-        .tg-user {
+        .user-info {
             display: flex;
             align-items: center;
             gap: 16px;
             position: relative;
             z-index: 2;
         }
-        .tg-avatar {
-            width: 56px; height: 56px;
+        .user-avatar {
+            width: 60px; height: 60px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, var(--accent), var(--accent-3));
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             color: #fff;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.15);
             overflow: hidden;
+            flex-shrink: 0;
         }
-        .tg-avatar img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .tg-info h3 {
+        .user-avatar img { width:100%; height:100%; object-fit:cover; }
+        .user-meta h3 {
             font-size: 1.1rem;
             font-weight: 600;
             color: #fff;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .tg-info .uid {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.7);
+        .user-meta .uid {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
             font-family: 'Space Grotesk', monospace;
         }
-        .tg-premium {
+        .user-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             margin-top: 8px;
             padding: 4px 12px;
-            background: rgba(255,255,255,0.15);
             border-radius: 100px;
-            font-size: 0.7rem;
-            color: #fff;
-            font-weight: 600;
+            font-size: 0.65rem;
+            font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        .tg-premium.active {
-            background: rgba(0,212,170,0.3);
-            color: #fff;
-        }
-        .tg-premium i { font-size: 0.7rem; }
-
-        /* ===== NAV ===== */
-        .nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 16px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(10,10,15,0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #fff;
-            text-decoration: none;
-        }
-        .nav-logo span { color: var(--accent); }
+        .badge-vip { background: linear-gradient(135deg, rgba(255,51,102,0.3), rgba(255,85,136,0.2)); color: #ff5588; border: 1px solid rgba(255,51,102,0.2); }
+        .badge-owner { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.15)); color: #ffd700; border: 1px solid rgba(255,215,0,0.2); }
+        .badge-admin { background: linear-gradient(135deg, rgba(0,212,170,0.2), rgba(0,212,170,0.1)); color: #00d4aa; border: 1px solid rgba(0,212,170,0.2); }
+        .badge-premium { background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(99,102,241,0.15)); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+        .badge-free { background: var(--bg-3); color: var(--text-dim); border: 1px solid var(--border); }
 
         /* ===== HERO ===== */
         .hero {
-            padding: 40px 5% 60px;
+            padding: 24px 5% 40px;
             text-align: center;
-            position: relative;
         }
         .hero-badge {
             display: inline-flex;
@@ -145,53 +119,44 @@
             border: 1px solid var(--border);
             padding: 8px 18px;
             border-radius: 100px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--accent-2);
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             font-family: 'Space Grotesk', sans-serif;
-        }
-        .hero-badge .pulse {
-            width: 6px; height: 6px;
-            background: var(--accent-2);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,212,170,0.4); }
-            50% { opacity: 0.5; box-shadow: 0 0 0 6px rgba(0,212,170,0); }
         }
         .hero h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-size: clamp(2.2rem, 7vw, 4rem);
             font-weight: 700;
-            line-height: 0.95;
-            letter-spacing: -3px;
-            margin-bottom: 8px;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-bottom: 12px;
         }
-        .hero h1 .main {
-            background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero h1 .sub {
-            display: block;
-            font-size: 0.4em;
-            letter-spacing: 8px;
-            color: var(--text-dim);
-            margin-top: 8px;
-            font-weight: 500;
-        }
-        .hero-desc {
-            font-size: 1rem;
+        .hero h1 span { color: var(--accent); }
+        .hero p {
+            font-size: 0.95rem;
             color: var(--text-secondary);
-            max-width: 450px;
-            margin: 24px auto 32px;
-            line-height: 1.7;
+            max-width: 420px;
+            margin: 0 auto 28px;
+            line-height: 1.6;
         }
-        .hero-desc strong { color: var(--accent); }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat .num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .hero-stat .lbl { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 
         /* ===== BUTTONS ===== */
         .btn {
@@ -215,1022 +180,381 @@
             color: #fff;
             box-shadow: 0 4px 20px var(--accent-glow);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255,51,102,0.3);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,51,102,0.3); }
         .btn-secondary {
             background: var(--bg-2);
             color: var(--text);
             border: 1.5px solid var(--border);
         }
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            background: var(--bg-3);
-        }
+        .btn-secondary:hover { border-color: var(--accent); background: var(--bg-3); }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; padding: 0 5%; max-width: 400px; margin: 0 auto 32px; }
 
         /* ===== SECTIONS ===== */
-        .section {
-            padding: 60px 5%;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .section { padding: 48px 5%; max-width: 800px; margin: 0 auto; }
         .section-label {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 3px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 10px;
         }
         .section-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
             font-weight: 700;
             color: #fff;
             letter-spacing: -1px;
+            margin-bottom: 8px;
         }
-        .section-desc {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-top: 10px;
-            line-height: 1.6;
-        }
-
-        /* ===== TOGGLE SWITCHES ===== */
-        .toggle-group {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin: 24px 0;
-        }
-        .toggle-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px 20px;
-            transition: 0.2s;
-        }
-        .toggle-item:hover { border-color: var(--border-light); }
-        .toggle-item .info h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 2px;
-        }
-        .toggle-item .info p {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-        .switch {
-            position: relative;
-            width: 50px;
-            height: 28px;
-            cursor: pointer;
-        }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            inset: 0;
-            background: var(--bg-3);
-            border-radius: 28px;
-            transition: 0.3s;
-            border: 1px solid var(--border);
-        }
-        .slider::before {
-            content: '';
-            position: absolute;
-            height: 22px;
-            width: 22px;
-            left: 2px;
-            bottom: 2px;
-            background: var(--text-dim);
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .switch input:checked + .slider {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .switch input:checked + .slider::before {
-            transform: translateX(22px);
-            background: #fff;
-        }
-
-        /* ===== SLIDER BAR ===== */
-        .slider-group {
-            margin: 24px 0;
-        }
-        .slider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .slider-header h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #fff;
-        }
-        .slider-value {
-            font-family: 'Space Grotesk', monospace;
-            font-size: 0.85rem;
-            color: var(--accent);
-            font-weight: 600;
-            background: var(--accent-glow);
-            padding: 4px 12px;
-            border-radius: 8px;
-        }
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            background: var(--bg-3);
-            border-radius: 6px;
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 10px var(--accent-glow);
-            transition: 0.2s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 4px 20px rgba(255,51,102,0.4);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 10px var(--accent-glow);
-        }
-
-        /* ===== PROGRESS RING ===== */
-        .progress-ring-wrap {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        .progress-item {
-            text-align: center;
-        }
-        .progress-ring {
-            position: relative;
-            width: 100px;
-            height: 100px;
-        }
-        .progress-ring svg {
-            transform: rotate(-90deg);
-        }
-        .progress-ring-bg {
-            fill: none;
-            stroke: var(--bg-3);
-            stroke-width: 6;
-        }
-        .progress-ring-fill {
-            fill: none;
-            stroke: url(#progress-gradient);
-            stroke-width: 6;
-            stroke-linecap: round;
-            stroke-dasharray: 283;
-            stroke-dashoffset: 283;
-            transition: stroke-dashoffset 1.5s ease;
-        }
-        .progress-text {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .progress-label {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-top: 8px;
-            font-weight: 500;
-        }
+        .section-desc { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6; margin-bottom: 28px; }
 
         /* ===== FEATURE CARDS ===== */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
+        .feature-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .feature-card {
             background: var(--bg-2);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             display: flex;
             align-items: flex-start;
-            gap: 16px;
-            transition: all 0.3s ease;
+            gap: 14px;
+            transition: all 0.2s ease;
         }
-        .feature-card:hover {
-            background: var(--bg-3);
-            border-color: var(--border-light);
-            transform: translateX(6px);
-        }
+        .feature-card:hover { background: var(--bg-3); border-color: var(--border-light); transform: translateX(4px); }
         .feature-card .icon-box {
-            width: 44px;
-            height: 44px;
-            min-width: 44px;
+            width: 40px; height: 40px; min-width: 40px;
             background: var(--accent-glow);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
-        .feature-card:hover .icon-box {
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            color: #fff;
-            transform: scale(1.1);
-        }
-        .feature-card h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .feature-card p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* ===== POPUP MODAL ===== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 32px;
-            max-width: 400px;
-            width: 100%;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .modal-overlay.active .modal {
-            transform: scale(1) translateY(0);
-        }
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 1rem;
             transition: 0.2s;
         }
-        .modal-close:hover {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-        }
-        .modal h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #fff;
-        }
-        .modal p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
+        .feature-card:hover .icon-box { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: #fff; }
+        .feature-card h4 { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .feature-card p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
 
-        /* ===== NEIKO SECTION ===== */
-        .neiko-section {
+        /* ===== COMMANDS SECTION ===== */
+        .cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .cmd-item {
             background: var(--bg-2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .neiko-visual {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .neiko-orb {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            box-shadow: 0 0 50px rgba(255,51,102,0.2);
-            animation: float 4s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-        .chat-row {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-msg {
-            background: var(--bg-3);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 14px 18px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.78rem;
             color: var(--text-secondary);
-            max-width: 85%;
             transition: 0.2s;
         }
-        .chat-msg:hover { border-color: var(--border-light); }
-        .chat-msg.user { align-self: flex-start; border-left: 3px solid var(--accent-2); }
-        .chat-msg.neiko { align-self: flex-end; border-right: 3px solid var(--accent); }
-        .chat-msg strong { color: #fff; font-size: 0.75rem; }
-        .chat-msg .pink { color: var(--accent); }
+        .cmd-item:hover { border-color: var(--accent); color: var(--text); }
+        .cmd-item code { color: var(--accent); font-family: 'Space Grotesk', monospace; font-size: 0.75rem; }
 
         /* ===== PRICING ===== */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
+        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .price-card {
             background: var(--bg-2);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 32px 24px;
-            transition: all 0.3s ease;
+            padding: 28px 22px;
+            transition: 0.3s;
             position: relative;
             overflow: hidden;
         }
-        .price-card:hover {
-            border-color: var(--border-light);
-            transform: translateY(-6px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-        }
-        .price-card.popular {
-            border-color: rgba(255,51,102,0.2);
-        }
+        .price-card:hover { border-color: var(--border-light); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
+        .price-card.popular { border-color: rgba(255,51,102,0.2); }
         .price-card.popular::before {
             content: 'POPULAR';
-            position: absolute;
-            top: 14px;
-            right: -26px;
-            background: var(--accent);
-            color: #fff;
+            position: absolute; top: 12px; right: -28px;
+            background: var(--accent); color: #fff;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.6rem;
-            padding: 4px 28px;
-            transform: rotate(45deg);
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-size: 0.55rem; padding: 4px 28px;
+            transform: rotate(45deg); font-weight: 700; letter-spacing: 1px;
         }
-        .price-card h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
+        .price-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .price-card .price-sub { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 16px; }
+        .price-card .price { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 16px; }
+        .price-card .price span { font-size: 0.85rem; color: var(--text-dim); font-weight: 400; }
+        .price-card ul { list-style: none; }
+        .price-card ul li { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .price-card ul li i { color: var(--accent-2); font-size: 0.7rem; }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 20px 5%;
+            max-width: 800px;
+            margin: 0 auto 20px;
         }
-        .price-card .sub {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-        .price-card .amount {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1;
-            margin: 16px 0;
-        }
-        .price-card .amount span {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
-        .price-card ul {
-            list-style: none;
-            margin: 20px 0;
-        }
-        .price-card ul li {
-            padding: 8px 0;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .price-card ul li:last-child { border: none; }
-        .price-card ul li i { color: var(--accent-2); font-size: 0.8rem; }
-        .price-card ul li.off i { color: var(--text-fade); }
-        .price-card ul li.off { color: var(--text-dim); text-decoration: line-through; opacity: 0.4; }
+        .stat-item { text-align: center; }
+        .stat-item .num { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; color: #fff; }
+        .stat-item .lbl { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 
         /* ===== FOOTER ===== */
         .footer {
-            padding: 60px 5% 30px;
-            border-top: 1px solid var(--border);
             text-align: center;
-            background: var(--bg-2);
+            padding: 32px 5%;
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
         }
-        .footer-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
-        }
-        .footer-logo span { color: var(--accent); }
-        .footer-desc {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            max-width: 400px;
-            margin: 0 auto 24px;
-            line-height: 1.6;
-        }
-        .footer-desc strong { color: var(--text-secondary); }
-        .footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin: 24px 0;
-        }
-        .footer-social a {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
+        .footer p { font-size: 0.8rem; color: var(--text-dim); }
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        /* ===== AI STATUS ===== */
+        .ai-status {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--text-dim);
-            font-size: 1rem;
-            text-decoration: none;
-            transition: 0.2s;
+            gap: 12px;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin: 16px 5%;
+            max-width: 800px;
         }
-        .footer-social a:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-2px);
+        .ai-dot {
+            width: 8px; height: 8px;
+            background: var(--accent-2);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,212,170,0.4);
+            animation: pulse-dot 2s infinite;
         }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 16px 0;
-            flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-copy {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.7rem;
-            color: var(--text-fade);
-            margin-top: 30px;
-            letter-spacing: 1px;
-        }
-        .footer-copy a { color: var(--text-dim); text-decoration: none; transition: 0.2s; }
-        .footer-copy a:hover { color: var(--accent); }
+        @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+        .ai-status span { font-size: 0.82rem; color: var(--text-secondary); }
+        .ai-status span b { color: var(--text); }
 
         /* ===== RESPONSIVE ===== */
         @media (min-width: 640px) {
-            .feature-grid { grid-template-columns: repeat(2, 1fr); }
-            .pricing-grid { grid-template-columns: repeat(3, 1fr); }
-            .btn { width: auto; }
+            .feature-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .cmd-grid { grid-template-columns: 1fr 1fr 1fr; }
+            .pricing-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hero-stats { gap: 20px; }
+            .hero-stat .num { font-size: 1.4rem; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SVG Gradient Defs -->
-    <svg width="0" height="0" style="position:absolute;">
-        <defs>
-            <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:var(--accent);stop-opacity:1" />
-                <stop offset="100%" style="stop-color:var(--accent-3);stop-opacity:1" />
-            </linearGradient>
-        </defs>
-    </svg>
-
-    <!-- Telegram User Header -->
-    <div class="tg-header" id="tg-header" style="display:none;">
-        <div class="tg-user">
-            <div class="tg-avatar" id="tg-avatar">
-                <i class="fa-solid fa-user"></i>
+    <!-- User Header -->
+    <div class="user-header" id="userHeader">
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">
+                <i class="fas fa-user"></i>
             </div>
-            <div class="tg-info">
-                <h3 id="tg-name">User</h3>
-                <div class="uid" id="tg-uid">ID: ---</div>
-                <div class="tg-premium" id="tg-premium">
-                    <i class="fa-solid fa-crown"></i> Free User
-                </div>
+            <div class="user-meta">
+                <h3 id="userName">Loading... <span id="userBadge"></span></h3>
+                <div class="uid" id="userId">ID: ---</div>
+                <div class="user-badge badge-free" id="userStatusBadge">Free User</div>
             </div>
         </div>
     </div>
-
-    <!-- Nav -->
-    <nav class="nav">
-        <a href="#" class="nav-logo">InstaSaver<span>.</span></a>
-        <div style="display:flex; gap:12px; align-items:center;">
-            <button class="btn btn-primary" style="padding:10px 20px; font-size:0.8rem;" onclick="openModal('settings')">
-                <i class="fa-solid fa-gear"></i>
-            </button>
-        </div>
-    </nav>
 
     <!-- Hero -->
-    <header class="hero">
-        <div class="hero-badge">
-            <span class="pulse"></span>
-            India's First AI Powered Bot
-        </div>
-        <h1>
-            <span class="main">InstaSaver</span>
-            <span class="sub">PRO V3.1</span>
-        </h1>
-        <p class="hero-desc">
-            The most advanced Instagram media extraction engine on Telegram. HD downloads, AI chat, batch processing — all powered by <strong>multi-provider AI clusters</strong>.
-        </p>
-        <div style="display:flex; flex-direction:column; gap:12px; max-width:300px; margin:0 auto;">
-            <a href="https://t.me/codeiox_bot" class="btn btn-primary" target="_blank">
-                <i class="fa-brands fa-telegram"></i> Launch Bot
-            </a>
-            <a href="https://t.me/codeiox_bot?start=plan" class="btn btn-secondary" target="_blank">
-                <i class="fa-solid fa-crown"></i> View Plans
-            </a>
-        </div>
-    </header>
-
-    <!-- Progress Rings -->
-    <div class="section" style="padding-top:20px;">
-        <div class="progress-ring-wrap">
-            <div class="progress-item">
-                <div class="progress-ring">
-                    <svg width="100" height="100" viewBox="0 0 100 100">
-                        <circle class="progress-ring-bg" cx="50" cy="50" r="45"/>
-                        <circle class="progress-ring-fill" cx="50" cy="50" r="45" id="ring-1"/>
-                    </svg>
-                    <div class="progress-text" id="ring-text-1">0%</div>
-                </div>
-                <div class="progress-label">Uptime</div>
-            </div>
-            <div class="progress-item">
-                <div class="progress-ring">
-                    <svg width="100" height="100" viewBox="0 0 100 100">
-                        <circle class="progress-ring-bg" cx="50" cy="50" r="45"/>
-                        <circle class="progress-ring-fill" cx="50" cy="50" r="45" id="ring-2"/>
-                    </svg>
-                    <div class="progress-text" id="ring-text-2">0%</div>
-                </div>
-                <div class="progress-label">Users</div>
-            </div>
-            <div class="progress-item">
-                <div class="progress-ring">
-                    <svg width="100" height="100" viewBox="0 0 100 100">
-                        <circle class="progress-ring-bg" cx="50" cy="50" r="45"/>
-                        <circle class="progress-ring-fill" cx="50" cy="50" r="45" id="ring-3"/>
-                    </svg>
-                    <div class="progress-text" id="ring-text-3">0%</div>
-                </div>
-                <div class="progress-label">Speed</div>
-            </div>
+    <div class="hero">
+        <div class="hero-badge"><i class="fas fa-sparkles"></i> v4.0 Neiko Edition</div>
+        <h1>InstaSaver <span>Pro</span></h1>
+        <p>India's most advanced <strong>AI-powered</strong> Instagram downloader with human-like Neiko AI assistant, smart song downloads, and 40+ premium features.</p>
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="num" id="statUsers">---</div><div class="lbl">Users</div></div>
+            <div class="hero-stat"><div class="num" id="statDownloads">---</div><div class="lbl">Downloads</div></div>
+            <div class="hero-stat"><div class="num" id="statPremium">---</div><div class="lbl">Premium</div></div>
         </div>
     </div>
 
-    <!-- Settings / Toggles -->
-    <section class="section">
-        <div class="section-header">
-            <div class="section-label">Settings</div>
-            <h2 class="section-title">Configure Bot</h2>
-        </div>
-        
-        <div class="toggle-group">
-            <div class="toggle-item">
-                <div class="info">
-                    <h4>Auto-Delete</h4>
-                    <p>Delete media after 24h</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-item">
-                <div class="info">
-                    <h4>HD Downloads</h4>
-                    <p>Always download in HD</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-item">
-                <div class="info">
-                    <h4>Neiko AI</h4>
-                    <p>Enable AI chat assistant</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-item">
-                <div class="info">
-                    <h4>Notifications</h4>
-                    <p>Get download alerts</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
+    <!-- Action Buttons -->
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="openBot()">
+            <i class="fab fa-telegram"></i> Open Bot on Telegram
+        </button>
+        <button class="btn btn-secondary" onclick="shareBot()">
+            <i class="fas fa-share-nodes"></i> Share with Friends
+        </button>
+    </div>
 
-        <!-- Slider -->
-        <div class="slider-group">
-            <div class="slider-header">
-                <h4>Download Quality</h4>
-                <div class="slider-value" id="quality-value">1080p</div>
-            </div>
-            <input type="range" min="0" max="3" value="2" id="quality-slider">
-        </div>
-        <div class="slider-group">
-            <div class="slider-header">
-                <h4>Batch Size</h4>
-                <div class="slider-value" id="batch-value">5 URLs</div>
-            </div>
-            <input type="range" min="1" max="10" value="5" id="batch-slider">
-        </div>
-    </section>
+    <!-- AI Status -->
+    <div class="ai-status" style="margin: 0 auto 20px;">
+        <div class="ai-dot"></div>
+        <span><b>Neiko AI v5.0</b> is online — 3 AI fallback system active</span>
+    </div>
 
     <!-- Features -->
-    <section class="section" id="features">
-        <div class="section-header">
-            <div class="section-label">Core Systems</div>
-            <h2 class="section-title">Features</h2>
-        </div>
+    <div class="section">
+        <div class="section-label">Features</div>
+        <div class="section-title">Everything You Need</div>
+        <div class="section-desc">40+ powerful features packed into one intelligent bot.</div>
         <div class="feature-grid">
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-download"></i></div>
-                <div>
-                    <h4>Universal Payload</h4>
-                    <p>Reels, IGTV, Carousels & Stories in HD</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-music"></i></div>
-                <div>
-                    <h4>Audio Override</h4>
-                    <p>High-bitrate MP3 extraction</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-layer-group"></i></div>
-                <div>
-                    <h4>Batch Execution</h4>
-                    <p>Up to 5 URLs simultaneously</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-brain"></i></div>
-                <div>
-                    <h4>Neiko AI Core</h4>
-                    <p>Gen-Z AI with real attitude</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-bomb"></i></div>
-                <div>
-                    <h4>Auto-Destruct</h4>
-                    <p>Auto-wipe after 24 hours</p>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-gauge-high"></i></div>
-                <div>
-                    <h4>Dashboard v3.1</h4>
-                    <p>Real-time stats & analytics</p>
-                </div>
-            </div>
+            <div class="feature-card"><div class="icon-box"><i class="fab fa-instagram"></i></div><div><h4>Instagram Downloader</h4><p>Unlimited downloads for reels, posts, stories, and carousels in HD quality.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-music"></i></div><div><h4>MP3 Extractor</h4><p>Extract audio from any Instagram video. High-quality 192kbps output.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-robot"></i></div><div><h4>Neiko AI v5.0</h4><p>Human-like AI assistant. Speaks Hinglish. Not a bot — a real friend.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-brain"></i></div><div><h4>Smart Intent Detection</h4><p>Just say "download this link" — AI understands and acts directly.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-music"></i></div><div><h4>Song Downloader</h4><p>Search → Playlist → Select → Download. 3 API fallback system.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-fingerprint"></i></div><div><h4>Music Recognition</h4><p>Identify any song from a reel using AudD technology.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-layer-group"></i></div><div><h4>Batch Download</h4><p>Download up to 5 URLs simultaneously with one click.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-clock"></i></div><div><h4>Schedule Downloads</h4><p>Set a time and the bot will download automatically for you.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-palette"></i></div><div><h4>6 Themes</h4><p>Romantic, Dark, Cyber, Minimal, Ocean, Forest — your choice.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-globe"></i></div><div><h4>4 Languages</h4><p>English, Hindi, Hinglish, Urdu — fully localized experience.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-trophy"></i></div><div><h4>Achievement System</h4><p>Unlock badges from Bronze Lover to Insta God as you download.</p></div></div>
+            <div class="feature-card"><div class="icon-box"><i class="fas fa-tools"></i></div><div><h4>Utility Tools</h4><p>Weather, News, Jokes, Facts, Calculator, Password Gen, Timer, Reminders.</p></div></div>
         </div>
-    </section>
+    </div>
 
-    <!-- Neiko -->
-    <div class="neiko-section" id="neiko">
-        <section class="section">
-            <div class="section-header">
-                <div class="section-label">Artificial Intelligence</div>
-                <h2 class="section-title">Meet Neiko</h2>
-            </div>
-            <div class="neiko-visual">
-                <div class="neiko-orb">♥‿♥</div>
-            </div>
-            <div class="chat-row">
-                <div class="chat-msg user">
-                    <strong style="color: var(--accent-2);">User:</strong> Neiko, kya kar rahi ho?
-                </div>
-                <div class="chat-msg neiko">
-                    <strong class="pink">Neiko:</strong> Abe pagal! Main yahan teri help kar rahi hoon. Jaldi se link bhej! 😤
-                </div>
-                <div class="chat-msg neiko">
-                    <strong class="pink">Neiko:</strong> Hatt jaa, processing chal rahi hai... ✨💅
-                </div>
-            </div>
-        </section>
+    <!-- Commands -->
+    <div class="section">
+        <div class="section-label">Commands</div>
+        <div class="section-title">Bot Commands</div>
+        <div class="section-desc">50+ commands to control everything.</div>
+        <div class="cmd-grid">
+            <div class="cmd-item"><code>/start</code> — Welcome</div>
+            <div class="cmd-item"><code>/help</code> — All commands</div>
+            <div class="cmd-item"><code>/song</code> — Search & download</div>
+            <div class="cmd-item"><code>/playlist</code> — Song list</div>
+            <div class="cmd-item"><code>/findmusic</code> — Identify song</div>
+            <div class="cmd-item"><code>/mp3</code> — Extract audio</div>
+            <div class="cmd-item"><code>/weather</code> — Weather</div>
+            <div class="cmd-item"><code>/news</code> — Latest news</div>
+            <div class="cmd-item"><code>/joke</code> — Random joke</div>
+            <div class="cmd-item"><code>/fact</code> — Random fact</div>
+            <div class="cmd-item"><code>/calc</code> — Calculator</div>
+            <div class="cmd-item"><code>/password</code> — Gen password</div>
+            <div class="cmd-item"><code>/timer</code> — Countdown</div>
+            <div class="cmd-item"><code>/remind</code> — Set reminder</div>
+            <div class="cmd-item"><code>/neiko</code> — AI settings</div>
+            <div class="cmd-item"><code>/theme</code> — Change theme</div>
+            <div class="cmd-item"><code>/mystats</code> — Your profile</div>
+            <div class="cmd-item"><code>/plan</code> — Premium info</div>
+        </div>
     </div>
 
     <!-- Pricing -->
-    <section class="section" id="pricing">
-        <div class="section-header">
-            <div class="section-label">Access Control</div>
-            <h2 class="section-title">Pricing</h2>
-        </div>
+    <div class="section">
+        <div class="section-label">Pricing</div>
+        <div class="section-title">Choose Your Plan</div>
+        <div class="section-desc">Start free, upgrade anytime.</div>
         <div class="pricing-grid">
             <div class="price-card">
-                <h3>Standard</h3>
-                <p class="sub">For casual users</p>
-                <div class="amount">FREE</div>
+                <h3>Free Trial</h3>
+                <div class="price-sub">3 downloads per month</div>
+                <div class="price">₹0 <span>/mo</span></div>
                 <ul>
-                    <li><i class="fa-solid fa-check"></i> 3 Downloads / Month</li>
-                    <li><i class="fa-solid fa-check"></i> 20 AI Prompts / Day</li>
-                    <li><i class="fa-solid fa-check"></i> Public Server Node</li>
-                    <li class="off"><i class="fa-solid fa-xmark"></i> MP3 Ripping</li>
-                    <li class="off"><i class="fa-solid fa-xmark"></i> Batch Processing</li>
+                    <li><i class="fas fa-check"></i> 3 Downloads/month</li>
+                    <li><i class="fas fa-check"></i> 20 Neiko Chats/day</li>
+                    <li><i class="fas fa-check"></i> Basic features</li>
                 </ul>
-                <a href="https://t.me/codeiox_bot" class="btn btn-secondary" target="_blank">Start Free</a>
             </div>
             <div class="price-card popular">
-                <h3>Elite</h3>
-                <p class="sub">Most popular</p>
-                <div class="amount">₹3<span>/DAY</span></div>
+                <h3>Premium</h3>
+                <div class="price-sub">Unlimited everything</div>
+                <div class="price">₹3 <span>/day</span></div>
                 <ul>
-                    <li><i class="fa-solid fa-check"></i> Unlimited Downloads</li>
-                    <li><i class="fa-solid fa-check"></i> Unlimited AI Tokens</li>
-                    <li><i class="fa-solid fa-check"></i> Dedicated Root Node</li>
-                    <li><i class="fa-solid fa-check"></i> MP3 Ripping Unlocked</li>
-                    <li><i class="fa-solid fa-check"></i> 5x Batch Multiplier</li>
+                    <li><i class="fas fa-check"></i> Unlimited Downloads</li>
+                    <li><i class="fas fa-check"></i> Unlimited Neiko AI</li>
+                    <li><i class="fas fa-check"></i> MP3 Extractor</li>
+                    <li><i class="fas fa-check"></i> Batch Downloads</li>
+                    <li><i class="fas fa-check"></i> Song Downloader</li>
+                    <li><i class="fas fa-check"></i> All 40+ Features</li>
+                    <li><i class="fas fa-check"></i> Priority Support</li>
                 </ul>
-                <a href="https://t.me/codeiox_bot?start=plan" class="btn btn-primary" target="_blank">
-                    <i class="fa-brands fa-telegram"></i> Upgrade
-                </a>
             </div>
-            <div class="price-card">
-                <h3>SysAdmin</h3>
-                <p class="sub">For power users</p>
-                <div class="amount">₹99<span>/MO</span></div>
-                <ul>
-                    <li><i class="fa-solid fa-check"></i> Everything in Elite</li>
-                    <li><i class="fa-solid fa-check"></i> Priority Support</li>
-                    <li><i class="fa-solid fa-check"></i> Custom Watermarks</li>
-                    <li><i class="fa-solid fa-check"></i> API Key Access</li>
-                    <li><i class="fa-solid fa-check"></i> Direct @code_iox</li>
-                </ul>
-                <a href="https://t.me/code_iox" class="btn btn-secondary" target="_blank">Contact</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-logo">InstaSaver<span>.</span></div>
-        <p class="footer-desc">
-            <strong>India's First AI Powered Bot.</strong> Built with precision by <strong>@code_iox</strong>.
-        </p>
-        <div class="footer-social">
-            <a href="https://t.me/codeiox_bot" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://t.me/code_iox" target="_blank"><i class="fa-solid fa-user"></i></a>
-            <a href="https://t.me/codeiox_bot?start=plan" target="_blank"><i class="fa-solid fa-crown"></i></a>
-            <a href="https://t.me/codeiox_bot?start=help" target="_blank"><i class="fa-solid fa-circle-question"></i></a>
-        </div>
-        <div class="footer-links">
-            <a href="#features">Features</a>
-            <a href="#neiko">Neiko</a>
-            <a href="#pricing">Pricing</a>
-            <a href="https://t.me/code_iox" target="_blank">@code_iox</a>
-        </div>
-        <div class="footer-copy">
-            v3.1.5 // <a href="https://t.me/code_iox" target="_blank">@code_iox (Arshad)</a> // <a href="https://t.me/codeiox_bot" target="_blank">@codeiox_bot</a>
-        </div>
-    </footer>
-
-    <!-- Modal Popup -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal()">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 id="modal-title">Settings</h3>
-            <p id="modal-body">Configure your bot preferences here.</p>
-            <button class="btn btn-primary" onclick="closeModal()">Save Changes</button>
         </div>
     </div>
 
+    <!-- Footer -->
+    <div class="footer">
+        <p>Made with ❤️ by <a href="https://t.me/code_iox" target="_blank">Mohammad Arshad</a></p>
+        <p style="margin-top:8px; font-size:0.7rem;">InstaSaver Pro v4.0 — Neiko Edition</p>
+    </div>
+
     <script>
-        // ===== TELEGRAM WEB APP INTEGRATION =====
+        // Telegram WebApp Integration
         let tg = window.Telegram.WebApp;
-        tg.ready();
         tg.expand();
+        tg.ready();
 
-        // Fetch user data from Telegram
-        function initTelegramUser() {
-            const user = tg.initDataUnsafe.user;
-            const startParam = tg.initDataUnsafe.start_param || '';
-            
-            if (user) {
-                // Show header
-                document.getElementById('tg-header').style.display = 'block';
-                
-                // Set name
-                const name = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-                document.getElementById('tg-name').textContent = name;
-                
-                // Set UID
-                document.getElementById('tg-uid').textContent = 'ID: ' + user.id;
-                
-                // Set avatar
-                if (user.photo_url) {
-                    document.getElementById('tg-avatar').innerHTML = '<img src="' + user.photo_url + '" alt="avatar">';
-                }
-                
-                // Check premium status from start_param or URL
-                // Format: start=premium_123456 or start=free_123456
-                let isPremium = false;
-                
-                // Method 1: Check start_param
-                if (startParam.includes('premium')) {
-                    isPremium = true;
-                }
-                
-                // Method 2: Check URL parameter (for web deployment)
-                const urlParams = new URLSearchParams(window.location.search);
-                const premiumParam = urlParams.get('premium');
-                const uidParam = urlParams.get('uid');
-                
-                if (premiumParam === 'true' || premiumParam === '1') {
-                    isPremium = true;
-                }
-                
-                // If UID passed in URL, use it
-                if (uidParam) {
-                    document.getElementById('tg-uid').textContent = 'ID: ' + uidParam;
-                }
-                
-                // Update premium badge
-                const premiumBadge = document.getElementById('tg-premium');
-                if (isPremium) {
-                    premiumBadge.innerHTML = '<i class="fa-solid fa-crown"></i> Premium Member';
-                    premiumBadge.classList.add('active');
-                } else {
-                    premiumBadge.innerHTML = '<i class="fa-solid fa-user"></i> Free User';
-                }
-                
-                // Send data back to bot (optional)
-                // tg.sendData(JSON.stringify({action: 'webapp_opened', uid: user.id, premium: isPremium}));
-            } else {
-                // Demo mode - show sample data
-                document.getElementById('tg-header').style.display = 'block';
-                document.getElementById('tg-name').textContent = 'Demo User';
-                document.getElementById('tg-uid').textContent = 'ID: 123456789';
-                document.getElementById('tg-premium').innerHTML = '<i class="fa-solid fa-user"></i> Free User';
-            }
-        }
-
-        // Initialize Telegram user
-        initTelegramUser();
-
-        // ===== PROGRESS RINGS =====
-        function setProgress(id, value, textId, suffix = '%') {
-            const circle = document.getElementById(id);
-            const text = document.getElementById(textId);
-            const radius = 45;
-            const circumference = 2 * Math.PI * radius;
-            const offset = circumference - (value / 100) * circumference;
-            
-            circle.style.strokeDashoffset = offset;
-            text.textContent = value + suffix;
-        }
-
-        // Animate progress rings on load
-        setTimeout(() => {
-            setProgress('ring-1', 99, 'ring-text-1', '%');
-            setProgress('ring-2', 2847, 'ring-text-2', '+');
-            setProgress('ring-3', 95, 'ring-text-3', '%');
-        }, 500);
-
-        // ===== SLIDERS =====
-        const qualitySlider = document.getElementById('quality-slider');
-        const qualityValue = document.getElementById('quality-value');
-        const qualities = ['480p', '720p', '1080p', '4K'];
-        
-        qualitySlider.addEventListener('input', (e) => {
-            qualityValue.textContent = qualities[e.target.value];
-        });
-
-        const batchSlider = document.getElementById('batch-slider');
-        const batchValue = document.getElementById('batch-value');
-        
-        batchSlider.addEventListener('input', (e) => {
-            batchValue.textContent = e.target.value + ' URLs';
-        });
-
-        // ===== MODAL =====
-        function openModal(type) {
-            const overlay = document.getElementById('modal-overlay');
-            const title = document.getElementById('modal-title');
-            const body = document.getElementById('modal-body');
-            
-            if (type === 'settings') {
-                title.textContent = 'Bot Settings';
-                body.textContent = 'Your preferences have been saved. The bot will now use these settings for all downloads.';
-            }
-            
-            overlay.classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.remove('active');
-        }
-
-        // Close modal on overlay click
-        document.getElementById('modal-overlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
-        });
-
-        // ===== SMOOTH SCROLL =====
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                const t = document.querySelector(a.getAttribute('href'));
-                if (t) t.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // ===== SET THEME COLOR =====
+        // Theme colors
         tg.setHeaderColor('#0a0a0f');
         tg.setBackgroundColor('#0a0a0f');
+
+        // User data from Telegram
+        const user = tg.initDataUnsafe.user;
+        if (user) {
+            document.getElementById('userName').innerHTML = (user.first_name || 'User') + (user.last_name ? ' ' + user.last_name : '');
+            document.getElementById('userId').textContent = 'ID: ' + user.id;
+            if (user.photo_url) {
+                document.getElementById('userAvatar').innerHTML = '<img src="' + user.photo_url + '" alt="">';
+            } else {
+                document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>';
+            }
+        } else {
+            document.getElementById('userName').textContent = 'Guest User';
+            document.getElementById('userId').textContent = 'Login via Telegram';
+        }
+
+        // Auth with backend
+        async function authUser() {
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ init_data: tg.initData })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    const u = data.user;
+                    // Update badge
+                    const badgeEl = document.getElementById('userStatusBadge');
+                    if (u.is_owner) { badgeEl.textContent = '👑 Owner'; badgeEl.className = 'user-badge badge-owner'; }
+                    else if (u.is_vip) { badgeEl.textContent = '💖 VIP'; badgeEl.className = 'user-badge badge-vip'; }
+                    else if (u.is_admin) { badgeEl.textContent = '⚡ Admin'; badgeEl.className = 'user-badge badge-admin'; }
+                    else if (u.is_premium) { badgeEl.textContent = '💎 Premium'; badgeEl.className = 'user-badge badge-premium'; }
+                    else { badgeEl.textContent = '🆓 Free Trial'; badgeEl.className = 'user-badge badge-free'; }
+
+                    // Show badge icon
+                    if (u.is_owner || u.is_vip || u.is_admin || u.is_premium) {
+                        const icon = u.is_owner ? '👑' : u.is_vip ? '💖' : u.is_admin ? '⚡' : '💎';
+                        document.getElementById('userBadge').textContent = icon;
+                    }
+
+                    // Stats
+                    document.getElementById('statUsers').textContent = u.download_count || '0';
+                }
+            } catch (e) { console.log('Auth error:', e); }
+        }
+
+        // Fetch global stats
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                if (data.success) {
+                    const s = data.stats;
+                    document.getElementById('statUsers').textContent = formatNumber(s.total_users);
+                    document.getElementById('statDownloads').textContent = formatNumber(s.total_downloads);
+                    document.getElementById('statPremium').textContent = formatNumber(s.total_premium);
+                }
+            } catch (e) { console.log('Stats error:', e); }
+        }
+
+        function formatNumber(n) {
+            if (!n) return '0';
+            n = parseInt(n);
+            if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+            return n.toString();
+        }
+
+        function openBot() { tg.openTelegramLink('https://t.me/codeiox_bot'); }
+        function shareBot() {
+            const text = "Check out InstaSaver Pro — the most advanced Instagram downloader bot with AI! 🤖\n\n@codeiox_bot";
+            tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent('https://t.me/codeiox_bot') + '&text=' + encodeURIComponent(text));
+        }
+
+        // Initialize
+        authUser();
+        fetchStats();
     </script>
 </body>
 </html>
