@@ -3114,19 +3114,33 @@ RULES:
         const SONGS = ['song1.mp3', 'song2.mp3', 'song3.mp3'];
         let isMuted = false;
         let audio = null;
-        let musicInitialized = false;
+        let currentSongIndex = -1;
 
-        function createAudio() {
-            if (audio) return audio;
+        function getRandomSong() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * SONGS.length);
+            } while (newIndex === currentSongIndex && SONGS.length > 1);
+            currentSongIndex = newIndex;
+            return SONGS[newIndex];
+        }
+
+        function createAudio(forceNew) {
+            if (audio && !forceNew) return audio;
             try {
+                if (audio) {
+                    audio.pause();
+                    audio.src = '';
+                }
                 audio = new Audio();
                 audio.loop = true;
                 audio.volume = 0.25;
                 audio.preload = 'auto';
-                const randomSong = SONGS[Math.floor(Math.random() * SONGS.length)];
+                const randomSong = getRandomSong();
                 audio.src = randomSong;
+                console.log('Playing:', randomSong);
                 audio.onerror = function() {
-                    console.log('Audio file not found, music disabled');
+                    console.log('Audio file not found:', randomSong);
                     audio = null;
                 };
             } catch (e) {
@@ -3137,11 +3151,9 @@ RULES:
         }
 
         function tryPlayMusic() {
-            if (musicInitialized) return;
             try {
                 const a = createAudio();
                 if (!a) { updateMusicUI(false); return; }
-                musicInitialized = true;
                 const playPromise = a.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
@@ -3194,30 +3206,27 @@ RULES:
             }
         }
 
-        // Music init after page is stable
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                try { tryPlayMusic(); } catch(e) { console.log('Music init skipped'); }
-            }, 2000);
-        });
-
-        // Try on first user interaction
+        // Try autoplay on first user click anywhere on page
+        let firstClickDone = false;
         function onFirstInteraction() {
+            if (firstClickDone) return;
+            firstClickDone = true;
             try {
-                const a = createAudio();
-                if (a && a.paused) {
+                const a = createAudio(true); // force new random song
+                if (a) {
                     a.play().then(() => {
                         updateMusicUI(true);
-                    }).catch(() => {});
+                    }).catch(() => {
+                        updateMusicUI(false);
+                    });
                 }
             } catch (e) {}
-            document.removeEventListener('click', onFirstInteraction);
-            document.removeEventListener('touchstart', onFirstInteraction);
-            document.removeEventListener('scroll', onFirstInteraction);
         }
-        document.addEventListener('click', onFirstInteraction);
-        document.addEventListener('touchstart', onFirstInteraction);
-        document.addEventListener('scroll', onFirstInteraction, { passive: true });
+
+        // Attach to multiple events for guaranteed capture
+        document.addEventListener('click', onFirstInteraction, { once: true });
+        document.addEventListener('touchstart', onFirstInteraction, { once: true });
+        document.addEventListener('keydown', onFirstInteraction, { once: true });
 
 </script>
 
