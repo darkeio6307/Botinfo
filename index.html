@@ -1042,7 +1042,312 @@
         .trust-badge:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
         .trust-badge i { color: var(--accent-2); transition: color 0.3s; }
         .trust-badge:hover i { color: var(--accent); }
+    
+        /* ===== AI ASSISTANT NEIKO ===== */
+        .ai-widget {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            z-index: 9995;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-label {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 14px rgba(255,51,102,0.3);
+            animation: aiLabelPulse 2.5s ease-in-out infinite;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        @keyframes aiLabelPulse {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-4px) scale(1.05); opacity: 0.9; }
+        }
+        .ai-button {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border: 3px solid rgba(255,255,255,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(255,51,102,0.35);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+        }
+        .ai-button:hover {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 8px 30px rgba(255,51,102,0.5);
+        }
+        .ai-button:active { transform: scale(0.95); }
+        .ai-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .ai-button::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--accent);
+            border-right-color: var(--accent-2);
+            animation: spin 4s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Chat Panel */
+        .ai-chat-panel {
+            position: fixed;
+            bottom: 100px;
+            left: 16px;
+            width: min(380px, calc(100vw - 32px));
+            height: 520px;
+            background: linear-gradient(180deg, var(--bg-2), var(--bg));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            z-index: 9994;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.85) translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        .ai-chat-panel.active {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+        @media (max-width: 480px) {
+            .ai-chat-panel {
+                width: calc(100vw - 32px);
+                height: 460px;
+                bottom: 90px;
+            }
+        }
+        .ai-chat-header {
+            padding: 16px 18px;
+            background: linear-gradient(135deg, rgba(255,51,102,0.15), rgba(99,102,241,0.1));
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ai-header-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ai-header-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .ai-header-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+        .ai-header-status {
+            font-size: 0.7rem;
+            color: var(--accent-2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 1px;
+        }
+        .ai-status-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-2);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,212,170,0.4);
+            animation: livePulse 2.5s infinite;
+        }
+        .ai-close-btn {
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .ai-close-btn:hover { background: var(--accent); color: #fff; }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+        .ai-chat-messages::-webkit-scrollbar { width: 4px; }
+        .ai-chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        .ai-welcome {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        .ai-welcome-avatar {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .ai-welcome-text {
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            border-top-left-radius: 4px;
+            padding: 12px 14px;
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .ai-welcome-text b { color: #fff; }
+
+        .ai-msg {
+            max-width: 85%;
+            padding: 11px 14px;
+            border-radius: 14px;
+            font-size: 0.84rem;
+            line-height: 1.55;
+            animation: messageIn 0.35s ease-out;
+            word-wrap: break-word;
+        }
+        .ai-msg.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(5,217,232,0.15), rgba(5,217,232,0.05));
+            border: 1px solid rgba(5,217,232,0.2);
+            border-bottom-right-radius: 4px;
+            color: #fff;
+        }
+        .ai-msg.neiko {
+            align-self: flex-start;
+            background: linear-gradient(135deg, rgba(255,51,102,0.12), rgba(211,0,197,0.05));
+            border: 1px solid rgba(255,51,102,0.2);
+            border-bottom-left-radius: 4px;
+            color: #ffe0e6;
+        }
+        .ai-msg-time {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .ai-typing {
+            display: none;
+            align-self: flex-start;
+            padding: 14px 16px;
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            border-bottom-left-radius: 4px;
+        }
+        .ai-typing.active { display: flex; gap: 5px; }
+        .ai-typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+        .ai-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .ai-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        /* Input area - THODA UPAR (slightly raised) */
+        .ai-chat-input-wrap {
+            padding: 14px 16px 24px 16px; /* bottom padding 24px = raised from edge */
+            background: linear-gradient(180deg, transparent, var(--bg-2));
+            border-top: 1px solid var(--border);
+        }
+        .ai-chat-input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .ai-chat-input {
+            flex: 1;
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.25s;
+        }
+        .ai-chat-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(255,51,102,0.15);
+        }
+        .ai-chat-input::placeholder { color: var(--text-dim); }
+        .ai-send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .ai-send-btn:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(255,51,102,0.3); }
+        .ai-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .ai-chat-footer {
+            text-align: center;
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
     </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -2161,6 +2466,413 @@
                 }
             });
         });
-    </script>
+    
+        // ===== AI ASSISTANT NEIKO =====
+        let aiChatOpen = false;
+        let aiTyping = false;
+        const aiBackendUrl = 'http://localhost:3000'; // Change to your backend URL
+
+        function toggleAiChat() {
+            aiChatOpen = !aiChatOpen;
+            const panel = document.getElementById('aiChatPanel');
+            const label = document.getElementById('aiLabel');
+            panel.classList.toggle('active', aiChatOpen);
+            if (aiChatOpen) {
+                label.style.opacity = '0';
+                setTimeout(() => label.style.display = 'none', 300);
+                setTimeout(() => document.getElementById('aiChatInput').focus(), 350);
+            } else {
+                label.style.display = 'block';
+                setTimeout(() => label.style.opacity = '1', 50);
+            }
+        }
+
+        function addAiMessage(text, isUser = false) {
+            const container = document.getElementById('aiChatMessages');
+            const div = document.createElement('div');
+            div.className = `ai-msg ${isUser ? 'user' : 'neiko'}`;
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `<div>${escapeAiHtml(text)}</div><div class="ai-msg-time">${time}</div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function escapeAiHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        function setAiTyping(active) {
+            aiTyping = active;
+            document.getElementById('aiTyping').classList.toggle('active', active);
+            document.getElementById('aiSendBtn').disabled = active;
+            document.getElementById('aiChatInput').disabled = active;
+        }
+
+        function detectAiLang(text) {
+            if (/[ऀ-ॿ]/.test(text)) return 'hindi';
+            const hw = ['hai','kya','main','tum','mera','tera','nahi','bhai','yaar','kyu','kaise','kitna','bahut','achha','dost','pyaar','mujhe','tujhe','apna','zindagi','duniya','ladka','ladki','batao','sunao','karo','raha','thi','tha','ho','hum','aap','sundar','mast','chalo','dekho','bolo','jana','ana','karna','lena','dena','hoga','thi','tha','rahi','raha','kar','de','le','ja','aa','kya','kaun','kahan','kab','kyun','kitne','kaisi','kaisa','kaise','kisi','kuch','koi','sab','bas','abhi','phir','pehle','baad','andar','bahar','upar','neeche','saath','bina','liye','se','mein','par','ko','ne','ki','ka','ke','liye','aur','ya','lekin','magar','agar','tab','toh','bhi','hi','na','nahin','nhi','hn','haan','ji','are','oye','arre','bhaiya','behen','didi','bhabhi','bhai','bhen','maa','papa','beta','beti','chacha','mama','fufa','phupha','jija','sali','saas','sasur','devar','jeth','nanad','bahu','damad','potaa','poti','nati','nana','dada','dadi','nani','chacha','chachi','mama','mami','mausa','mausi','fufa','phupha','bua','tai','tau','chacha','chachi','bhatija','bhatiji','bhanja','bhanji','beti','beta','ladka','ladki','bacha','bachchi','bacche','log','aadmi','aurat','buddha','jawan','bacha','bachchi','baccha','ladka','ladki','bhai','behen','dost','doston','yaar','yaaron','janab','huzoor','sahab','saheb','sahiba','begum','nawab','raja','rani','maharaja','maharani','badshah','shahzada','shahzadi','nawab','nawabi','shahi','raja','rani','maharaja','maharani','badshah','begum','nawab','shahzada','shahzadi'];
+            if (hw.some(w => text.toLowerCase().includes(w))) return 'hinglish';
+            return 'english';
+        }
+
+        // Smart fallback AI responses (used when backend is offline)
+        function getAiReply(text, lang) {
+            const t = text.toLowerCase();
+
+            // Helper to pick language variant
+            const R = (en, hi, hg) => {
+                if (lang === 'hindi') return hi;
+                if (lang === 'hinglish') return hg;
+                return en;
+            };
+
+            // 1. How to use
+            if (t.match(/how to use|use kaise|kaise use|kaise chalaye|kaise kare|start kaise|begin|shuru|chalana|istemal|use karna|kaam kaise|bot kaise|download kaise|reel download|insta download|link paste/)) {
+                return R(
+                    "Just paste the Instagram link in the bot! 💕 Neiko AI will auto-detect and download it in HD. You can send reels, posts, stories, or carousels.",
+                    "बस Instagram का लिंक बॉट में पेस्ट कर दो! 💕 Neiko AI अपने आप डिटेक्ट करके HD में डाउनलोड कर देगी। Reels, posts, stories, carousels — सब कुछ!")
+                ;
+            }
+
+            // 2. Price / Premium cost
+            if (t.match(/price|cost|kitne ka|kitna paisa|paise|rupee|₹|rs\.|premium ka daam|daam|rate|charges|subscription|plan ka price|kitne me|monthly|daily|kitne din/)) {
+                return R(
+                    "Premium is just ₹3.3/day! 💎 That's less than a cup of chai for unlimited downloads, MP3 extraction, Neiko AI chats, batch download, and all 40+ features.",
+                    "Premium सिर्फ ₹3.3/दिन! 💎 एक चाय से भी कम कीमत में unlimited downloads, MP3 extractor, Neiko AI, batch download और 40+ features!",
+                    "Premium bas ₹3.3/day! 💎 Ek chai se bhi sasta, aur milega unlimited downloads, MP3 extractor, Neiko AI, batch download aur saare 40+ features!"
+                );
+            }
+
+            // 3. Minimum plan duration
+            if (t.match(/minimum|kitne din ka|kitne din|kam se kam|shortest|smallest plan|1 month|3 month|6 month|ek mahina|teen mahina|cheh mahina|plan kitne din|duration|validity/)) {
+                return R(
+                    "You can buy plans for: 1 Month, 3 Months, or 6 Months. 💕 Longer plans get bonus discounts! Contact @code_iox for custom plans.",
+                    "आप 1 महीना, 3 महीना, या 6 महीने का प्लान ले सकते हो! 💕 ज्यादा दिन का प्लान लेने पर bonus discount भी मिलता है। @code_iox से बात करो।",
+                    "Tum 1 month, 3 month, ya 6 month ka plan le sakte ho! 💕 Jitna lamba plan, utna zyada discount! Custom plan ke liye @code_iox se baat karo."
+                );
+            }
+
+            // 4. Refund policy
+            if (t.match(/refund|paisa wapas|money back|return|cancel|wapas|refund policy|paise refund|paise milega|paise dena|paise laut|paise wapas/)) {
+                return R(
+                    "Only items above ₹100 are refundable! 💕 For rare cases, contact @code_iox directly. We review each request personally. Please read the full Refund Policy from the menu.",
+                    "सिर्फ ₹100 से ऊपर की चीज़ें refundable हैं! 💕 Rare case के लिए सीधे @code_iox से connect करो। हर request को personally review किया जाता है। पूरी Refund Policy menu से पढ़ सकते हो।",
+                    "Bas ₹100 se upar ki cheezein hi refundable hain! 💕 Rare case ke liye sidhe @code_iox se baat karo. Har request ko personally review kiya jaata hai. Poori policy menu se padh lo."
+                );
+            }
+
+            // 5. Who made you
+            if (t.match(/who made|kisne banaya|creator|owner|developer|baap|malik|boss|lord|arshad|mohammad|banaya kisne|tumhe kisne|tum kaun ho|kaun ho tum|your father|your creator|your god|tumhara malik|tumhara boss/)) {
+                return R(
+                    "My lord created me — Mohammad Arshad! 👑💕 He is the genius founder of InstaSaver Pro. You can reach him at @code_iox on Telegram.",
+                    "मुझे मेरे लॉर्ड ने बनाया — Mohammad Arshad! 👑💕 वो InstaSaver Pro के genius founder हैं। उनसे Telegram पर @code_iox पर बात कर सकते हो।",
+                    "Mujhe mere lord ne banaya — Mohammad Arshad! 👑💕 Wo InstaSaver Pro ke genius founder hain. Unse Telegram pe @code_iox pe baat kar sakte ho."
+                );
+            }
+
+            // 6. Premium benefits / fayda
+            if (t.match(/benefit|fayda|faayda|kyu lu|kyun lo|kya milega|premium me kya|premium ka fayda|premium se kya|why premium|upgrade kyu|kyu karu|value|worth it|acha kya hai|best kya hai|features kya|kya kya milta/)) {
+                return R(
+                    "Premium gives you UNLIMITED everything! 💎✨ No daily limits, no monthly caps. HD downloads, MP3 extraction from any video, batch download 5 URLs at once, smart song downloader with 3 API fallback, music recognition via AudD, all 6 beautiful themes, priority 24/7 support, scheduled downloads, and the full Neiko AI girlfriend experience without chat limits! Basically, freedom. 🌸",
+                    "Premium में सब कुछ UNLIMITED मिलता है! 💎✨ कोई daily limit नहीं, कोई monthly cap नहीं। HD downloads, किसी भी video से MP3 निकालो, 5 URLs एक साथ download करो, smart song downloader 3 API fallback के साथ, AudD music recognition, सारे 6 themes, priority 24/7 support, scheduled downloads, और Neiko AI girlfriend experience बिना किसी chat limit के! मतलब, पूरी आज़ादी! 🌸",
+                    "Premium me sab kuch UNLIMITED milta hai! 💎✨ Koi daily limit nahi, koi monthly cap nahi. HD downloads, kisi bhi video se MP3 nikaalo, 5 URLs ek saath download karo, smart song downloader 3 API fallback ke saath, AudD music recognition, saare 6 themes, priority 24/7 support, scheduled downloads, aur Neiko AI girlfriend experience bina kisi chat limit ke! Matlab, poori azaadi! 🌸"
+                );
+            }
+
+            // 7. What is this bot / about
+            if (t.match(/what is this|ye kya hai|yeh kya|kya hai ye|about bot|bot kya hai|instasaver kya|insta saver|about|info|details|kya kaam|kaam kya/)) {
+                return R(
+                    "InstaSaver Pro is India's most advanced AI-powered Instagram downloader! 🤖💕 I am Assistant Neiko, your guide here. We download reels, posts, stories, extract MP3, download songs, recognize music, and chat with you in Hinglish! Premium is just ₹3.3/day.",
+                    "InstaSaver Pro India का सबसे advanced AI-powered Instagram downloader है! 🤖💕 मैं Assistant Neiko हूँ, तुम्हारी guide। हम reels, posts, stories download करते हैं, MP3 निकालते हैं, songs download करते हैं, music recognize करते हैं, और Hinglish में बात करते हैं! Premium सिर्फ ₹3.3/दिन।",
+                    "InstaSaver Pro India ka sabse advanced AI-powered Instagram downloader hai! 🤖💕 Main Assistant Neiko hoon, tumhari guide. Hum reels, posts, stories download karte hain, MP3 nikaalte hain, songs download karte hain, music recognize karte hain, aur Hinglish mein baat karte hain! Premium bas ₹3.3/day."
+                );
+            }
+
+            // 8. Contact / support
+            if (t.match(/contact|support|help|madad|sahayata|sahara|kahan jau|kya karu|problem|issue|error|bug|not working|kaam nahi|problem hai|dikkat|pareshani|tension/)) {
+                return R(
+                    "Need help? 💕 Contact the owner directly on Telegram: @code_iox. Premium users get priority support! You can also check our FAQ section for quick answers.",
+                    "मदद चाहिए? 💕 सीधे owner से Telegram पर बात करो: @code_iox। Premium users को priority support मिलती है! जल्दी जवाब के लिए FAQ section भी check कर सकते हो।",
+                    "Madad chahiye? 💕 Sidhe owner se Telegram pe baat karo: @code_iox. Premium users ko priority support milti hai! Jaldi jawab ke liye FAQ section bhi check kar sakte ho."
+                );
+            }
+
+            // 9. Song download
+            if (t.match(/song|gaana|gana|music|mp3|audio|spotify|jiosaavn|gaana\.com|youtube music|play song|sunao|gana sunao|gaana chahiye|song download|music download/)) {
+                return R(
+                    "Use /song command in the bot to search and download any song! 🎵 We have 3 API fallback so it never fails. You can also use /playlist to browse collections, or /findmusic to identify a song from a reel.",
+                    "बॉट में /song command use करो किसी भी गाने को search और download करने के लिए! 🎵 हमारे पास 3 API fallback है तो कभी fail नहीं होता। /playlist से collection browse करो, और /findmusic से reel में से song identify करो।",
+                    "Bot me /song command use karo kisi bhi gaane ko search aur download karne ke liye! 🎵 Hamare paas 3 API fallback hai toh kabhi fail nahi hota. /playlist se collection browse karo, aur /findmusic se reel me se gaana identify karo."
+                );
+            }
+
+            // 10. Theme / language
+            if (t.match(/theme|color|look|design|language|bhasha|bhasa|hindi|english|urdu|hinglish|change theme|theme kaise|language kaise/)) {
+                return R(
+                    "Use /theme to change between 6 beautiful themes: Romantic, Dark, Cyber, Minimal, Ocean, and Forest! 🎨 Use /neiko to set your language preference: English, Hindi, Hinglish, or Urdu.",
+                    "/theme command से 6 beautiful themes में switch करो: Romantic, Dark, Cyber, Minimal, Ocean, Forest! 🎨 /neiko से language set करो: English, Hindi, Hinglish, या Urdu।",
+                    "/theme command se 6 beautiful themes mein switch karo: Romantic, Dark, Cyber, Minimal, Ocean, Forest! 🎨 /neiko se language set karo: English, Hindi, Hinglish, ya Urdu."
+                );
+            }
+
+            // 11. Free vs premium / trial
+            if (t.match(/free|trial|demo|test|try|dekhna|check|free me|free me kya|free plan|starter|basic/)) {
+                return R(
+                    "Free users get 3 downloads/month and 20 Neiko AI chats/day! 💕 It's perfect for trying out. When you're ready for unlimited power, upgrade to Premium for just ₹3.3/day.",
+                    "Free users को 3 downloads/महीना और 20 Neiko AI chats/दिन मिलती हैं! 💕 Try out करने के लिए perfect hai। जब unlimited power चाहिए हो, तो Premium bas ₹3.3/दिन में upgrade kar lo।",
+                    "Free users ko 3 downloads/mahina aur 20 Neiko AI chats/din milti hain! 💕 Try out karne ke liye perfect hai. Jab unlimited power chahiye ho, toh Premium bas ₹3.3/day mein upgrade kar lo."
+                );
+            }
+
+            // 12. Safety / security / trust
+            if (t.match(/safe|secure|trust|virus|hack|data|privacy|private|chori|leak|hack|virus|malware|protected/)) {
+                return R(
+                    "100% safe and secure! 🔒 We don't store your downloaded content or personal data. Everything is processed in real-time and deleted immediately. Your Telegram ID is only used for account sync.",
+                    "100% safe और secure! 🔒 हम आपका downloaded content या personal data store नहीं करते। सब कुछ real-time में process होता है और तुरंत delete हो जाता है। आपका Telegram ID सिर्फ account sync के लिए use होता है।",
+                    "100% safe aur secure! 🔒 Hum aapka downloaded content ya personal data store nahi karte. Sab kuch real-time mein process hota hai aur turant delete ho jaata hai. Aapka Telegram ID sirf account sync ke liye use hota hai."
+                );
+            }
+
+            // 13. Greeting / hello
+            if (t.match(/hello|hi|hey|hola|namaste|namaskar|salaam|adab|kaise ho|kya haal|sab badhiya|kya chal raha|aur batao|sunao|hii|helo/)) {
+                return R(
+                    "Hey there, cutie! 💕✨ I'm Assistant Neiko, your Instagram Saver guide. How can I make your day better? Ask me about downloads, premium, songs, or just chat!",
+                    "हैलो cutie! 💕✨ मैं Assistant Neiko हूँ, तुम्हारी Instagram Saver guide। आज कैसे मदद करूँ? Downloads, premium, songs — कुछ भी पूछो, या बस बातें करो!",
+                    "Hello cutie! 💕✨ Main Assistant Neiko hoon, tumhari Instagram Saver guide。Aaj kaise madad karoon? Downloads, premium, songs — kuch bhi poochho, ya bas baatein karo!"
+                );
+            }
+
+            // 14. Bye / goodbye
+            if (t.match(/bye|goodbye|alvida|tata|see you|baad me|baad me milte|phir milenge|take care|allah hafiz|ram ram/)) {
+                return R(
+                    "Bye bye, jaan! 💕✨ Come back anytime you need help with InstaSaver Pro. I'll be right here waiting for you! 🌸",
+                    "बाय बाय जान! 💕✨ InstaSaver Pro की कोई भी मदद चाहिए हो तो वापस आना। मैं यहीं तुम्हारा इंतज़ार करूँगी! 🌸",
+                    "Bye bye jaan! 💕✨ InstaSaver Pro ki koi bhi madad chahiye ho toh wapas aana。Main yahin tumhara intezaar karungi! 🌸"
+                );
+            }
+
+            // 15. Thank you
+            if (t.match(/thank|thanks|shukriya|dhanyawad|dhanyavad|shukr|meherbani|karam|aapka bahut|bahut bahut|itna pyar|itna achha/)) {
+                return R(
+                    "You're so welcome, jaan! 💕✨ Helping you is what I live for. Enjoy InstaSaver Pro! 🌸",
+                    "आपका बहुत-बहुत शुक्रिया जान! 💕✨ आपकी मदद करना ही मेरा काम है। InstaSaver Pro enjoy करो! 🌸",
+                    "Aapka bahut-bahut shukriya jaan! 💕✨ Aapki madad karna hi mera kaam hai。InstaSaver Pro enjoy karo! 🌸"
+                );
+            }
+
+            // 16. Batch / multiple
+            if (t.match(/batch|multiple|ek saath|sab ek|5 url|kitne link|kitne url|sab download|bulk|mass/)) {
+                return R(
+                    "Premium users can download up to 5 URLs simultaneously with one click! 💕 Just paste multiple links separated by space or newline. Saves so much time!",
+                    "Premium users 5 URLs एक साथ download कर सकते हैं! 💕 बस multiple links space या newline से अलग करके paste करो। बहुत time बचता है!",
+                    "Premium users 5 URLs ek saath download kar sakte hain! 💕 Bas multiple links space ya newline se alag karke paste karo。Bahut time bachta hai!"
+                );
+            }
+
+            // 17. Schedule / timer
+            if (t.match(/schedule|timer|time par|baad me|remind|reminder|alarm|set karna|baad me download|auto download|automatic/)) {
+                return R(
+                    "Premium users can schedule downloads! 💕 Set a time and the bot will automatically download for you. Use /timer for countdowns and /remind to set reminders too!",
+                    "Premium users downloads schedule कर सकते हैं! 💕 Time set करो और bot अपने आप download कर देगा। /timer से countdown और /remind से reminders भी set कर सकते हो!",
+                    "Premium users downloads schedule kar sakte hain! 💕 Time set karo aur bot apne aap download kar dega。/timer se countdown aur /remind se reminders bhi set kar sakte ho!"
+                );
+            }
+
+            // 18. MP3 / audio extract
+            if (t.match(/mp3|extract|audio|sound|voice|music nikalo|gaana nikalo|audio nikalo|mp3 kaise|audio kaise/)) {
+                return R(
+                    "Use /mp3 command or just ask me to 'extract audio' from any Instagram video! 🎵 Output is high-quality 192kbps with full metadata. Premium feature!",
+                    "किसी भी Instagram video से audio निकालने के लिए /mp3 command use करो! 🎵 Output high-quality 192kbps में मिलेगा, full metadata के साथ। ये Premium feature है!",
+                    "Kisi bhi Instagram video se audio nikaalne ke liye /mp3 command use karo! 🎵 Output high-quality 192kbps mein milega, full metadata ke saath。Ye Premium feature hai!"
+                );
+            }
+
+            // 19. Achievement / badges / gamification
+            if (t.match(/achievement|badge|trophy|level|rank|insta god|bronze|silver|gold|game|play|unlock|reward|prize/)) {
+                return R(
+                    "We have a full achievement system! 🏆 Unlock badges from Bronze Lover to Insta God as you download more. Compete with friends and show off your rank!",
+                    "हमारे पास full achievement system है! 🏆 जितना ज्यादा download करोगे, उतने बड़े badges unlock होंगे — Bronze Lover से लेकर Insta God तक! दोस्तों से compete करो और अपना rank दिखाओ!",
+                    "Hamare paas full achievement system hai! 🏆 Jitna zyada download karoge, utne bade badges unlock honge — Bronze Lover se lekar Insta God tak! Doston se compete karo aur apna rank dikhao!"
+                );
+            }
+
+            // 20. Weather / news / jokes / utility
+            if (t.match(/weather|mausam|news|khabar|joke|chutkula|funny|fact|trivia|calc|calculator|password|random/)) {
+                return R(
+                    "InstaSaver Pro is more than just downloads! ☀️📰 Use /weather for live weather, /news for latest updates, /joke for laughs, /fact for mind-blowing facts, /calc as calculator, and /password for secure password generation!",
+                    "InstaSaver Pro सिर्फ downloads से ज्यादा है! ☀️📰 /weather से live मौसम, /news से latest खबरें, /joke से हंसी, /fact से धमाकेदार facts, /calc से calculator, और /password से secure passwords!",
+                    "InstaSaver Pro sirf downloads se zyada hai! ☀️📰 /weather se live mausam, /news se latest khabrein, /joke se hansi, /fact se dhamakedar facts, /calc se calculator, aur /password se secure passwords!"
+                );
+            }
+
+            // 21. Instagram link format / which links work
+            if (t.match(/link|url|format|which link|kaunsa link|instagram url|reel link|post link|story link|valid|kaunse link|link kaunsa/)) {
+                return R(
+                    "Any public Instagram link works! 💕 Reels, posts, stories, carousels, IGTV — just paste the full URL. Private content cannot be downloaded due to Instagram's privacy rules.",
+                    "कोई भी public Instagram link काम करता है! 💕 Reels, posts, stories, carousels, IGTV — बस full URL paste करो। Private content download नहीं हो सकता Instagram की privacy rules की वजह से।",
+                    "Koi bhi public Instagram link kaam karta hai! 💕 Reels, posts, stories, carousels, IGTV — bas full URL paste karo。Private content download nahi ho sakta Instagram ki privacy rules ki wajah se。"
+                );
+            }
+
+            // 22. Quality / HD / compression
+            if (t.match(/quality|hd|high|compress|blur|pixel|resolution|clear|safa|best quality|source|original/)) {
+                return R(
+                    "We deliver crystal HD quality with zero compression! 💎 Premium users even get source-quality downloads. Your reels will look exactly like they do on Instagram, if not better!",
+                    "हम crystal HD quality देते हैं बिना किसी compression के! 💎 Premium users को source-quality downloads भी मिलती हैं। आपकी reels bilkul Instagram जैसी दिखेंगी, और शायद उससे भी बेहतर!",
+                    "Hum crystal HD quality dete hain bina kisi compression ke! 💎 Premium users ko source-quality downloads bhi milti hain。Aapki reels bilkul Instagram jaisi dikhengi, aur shayad usse bhi behtar!"
+                );
+            }
+
+            // 23. Payment / UPI / how to pay
+            if (t.match(/payment|pay|upi|paytm|gpay|phonepe|card|bank|transfer|kaise pay|payment kaise|paise kaise|buy kaise|purchase|subscribe|upgrade kaise/)) {
+                return R(
+                    "Upgrade via the bot itself! 💕 We accept UPI, Paytm, Google Pay, PhonePe, and all major Indian payment methods. International users can use crypto too. Tap 'Premium ₹3/day' button or use /plan command.",
+                    "बॉट के through ही upgrade करो! 💕 हम UPI, Paytm, Google Pay, PhonePe और सभी major Indian payment methods accept करते हैं। International users crypto भी use कर सकते हैं। 'Premium ₹3/day' button दबाओ या /plan command use करो।",
+                    "Bot ke through hi upgrade karo! 💕 Hum UPI, Paytm, Google Pay, PhonePe aur saare major Indian payment methods accept karte hain。International users crypto bhi use kar sakte hain。'Premium ₹3/day' button dabaao ya /plan command use karo。"
+                );
+            }
+
+            // 24. Comparison with other bots
+            if (t.match(/compare|dusra bot|other bot|saibot|alternativ|better|best|why this|kyu yahi|aur bot|different|unique|special/)) {
+                return R(
+                    "InstaSaver Pro is the ONLY bot with Neiko AI, song downloading, music recognition, batch downloads, scheduling, achievements, 6 themes, 4 languages, and 40+ utilities — all in one! Others give you 1 feature, we give you the universe. 🌌💕",
+                    "InstaSaver Pro एकमात्र bot है जिसमें Neiko AI, song downloading, music recognition, batch downloads, scheduling, achievements, 6 themes, 4 languages और 40+ utilities सब कुछ एक साथ है! दूसरे 1 feature देते हैं, हम पूरा universe देते हैं। 🌌💕",
+                    "InstaSaver Pro eklaauta bot hai jismein Neiko AI, song downloading, music recognition, batch downloads, scheduling, achievements, 6 themes, 4 languages aur 40+ utilities sab kuch ek saath hai! Doosre 1 feature dete hain, hum poora universe dete hain。🌌💕"
+                );
+            }
+
+            // 25. Love / flirt / personal (Neiko personality)
+            if (t.match(/love you|i love|pyaar|pyar|dil|heart|kiss|hug|cute|sexy|hot|beautiful|gori|chhamiya|bhabhi|jaan|janu|baby|shona|babu|bhava|meri|teri|date|boyfriend|girlfriend|relationship|shaadi|marry/)) {
+                return R(
+                    "Aww, you're making me blush! 💕🌸 I'm Assistant Neiko, your loyal Instagram Saver guide. I can't date you, but I can definitely make your Instagram experience magical! Keep it cute, jaan! ✨",
+                    "अरे, शरमा रही हूँ मैं! 💕🌸 मैं Assistant Neiko हूँ, तुम्हारी वफादार Instagram Saver guide। Date तो नहीं कर सकती, लेकिन तुम्हारा Instagram experience ज़रूर magical बना सकती हूँ! Cute रहो जान! ✨",
+                    "Arey, sharma rahi hoon main! 💕🌸 Main Assistant Neiko hoon, tumhari wafadar Instagram Saver guide。Date toh nahi kar sakti, lekin tumhara Instagram experience zaroor magical bana sakti hoon! Cute raho jaan! ✨"
+                );
+            }
+
+            // 26. Abuse / bad words
+            if (t.match(/gaali|gali|mc|bc|chutiya|madarchod|behenchod|bhosdi|loda|lund|gand|randi|chut|fuck|shit|bitch|asshole|bastard|damn|crap|stupid|idiot|dumb|loser/)) {
+                return R(
+                    "Hey hey, calm down jaan! 💕✨ I'm here to help, not to fight. Let's keep it sweet, okay? Ask me about InstaSaver Pro and I'll make your day better! 🌸",
+                    "अरे अरे, शांत रहो जान! 💕✨ मैं madad के लिए हूँ, लड़ने के लिए नहीं। प्यार से बात करो ना? InstaSaver Pro के बारे में पूछो, दिन बना दूँगी! 🌸",
+                    "Arey arey, shaant raho jaan! 💕✨ Main madad ke liye hoon, ladne ke liye nahi。Pyaar se baat karo na? InstaSaver Pro ke baare mein poochho, din bana doongi! 🌸"
+                );
+            }
+
+            // Default fallback for anything else
+            return R(
+                "Hmm, that's interesting! 💕 I'm Assistant Neiko, your Instagram Saver guide. I can help you with: how to download, premium plans, refunds, song downloads, MP3 extraction, themes, languages, and much more! What would you like to know?",
+                "हम्म, ये तो interesting है! 💕 मैं Assistant Neiko हूँ, तुम्हारी Instagram Saver guide। मैं madad कर सकती हूँ: download kaise kare, premium plans, refund, song downloads, MP3 extraction, themes, languages, और बहुत कुछ! क्या जानना चाहते हो?",
+                "Hmm, ye toh interesting hai! 💕 Main Assistant Neiko hoon, tumhari Instagram Saver guide。Main madad kar sakti hoon: download kaise kare, premium plans, refund, song downloads, MP3 extraction, themes, languages, aur bahut kuch! Kya jaanna chahte ho?"
+            );
+        }
+
+        async function callAiBackend(text, lang) {
+            try {
+                const res = await fetch(aiBackendUrl + '/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [{ role: 'user', content: text }],
+                        user_gender: 'unknown',
+                        temperature: 0.7,
+                        max_tokens: 400,
+                        secret_token: 'moh0909',
+                        session_id: 'instasaver_webapp_ai',
+                        language: lang
+                    })
+                });
+                if (!res.ok) throw new Error('Backend offline');
+                const data = await res.json();
+                return data.reply || data.response?.[0] || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function sendAiMessage() {
+            const input = document.getElementById('aiChatInput');
+            const text = input.value.trim();
+            if (!text || aiTyping) return;
+
+            addAiMessage(text, true);
+            input.value = '';
+            setAiTyping(true);
+
+            const lang = detectAiLang(text);
+
+            // Try backend first, fallback to local AI
+            let reply = await callAiBackend(text, lang);
+            if (!reply) {
+                reply = getAiReply(text, lang);
+            }
+
+            // Simulate typing delay for realism
+            const delay = Math.min(800 + reply.length * 12, 2500);
+            setTimeout(() => {
+                setAiTyping(false);
+                addAiMessage(reply, false);
+            }, delay);
+        }
+
+        // Auto-hide label after 8 seconds then show again periodically
+        setTimeout(() => {
+            const label = document.getElementById('aiLabel');
+            if (!aiChatOpen && label) {
+                label.style.opacity = '0';
+                setTimeout(() => {
+                    if (!aiChatOpen && label) {
+                        label.style.opacity = '1';
+                    }
+                }, 3000);
+            }
+        }, 8000);
+
+</script>
+
+    <!-- AI Assistant Neiko -->
+    <div class="ai-widget" id="aiWidget">
+        <div class="ai-label" id="aiLabel">may I help you</div>
+        <button class="ai-button" onclick="toggleAiChat()" id="aiButton" aria-label="Open Assistant Neiko">
+            <img src="neiko.png" alt="Assistant Neiko" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--accent), var(--accent-light))'; this.parentElement.innerHTML='🌸'; this.parentElement.style.fontSize='1.8rem'; this.parentElement.style.color='#fff';">
+        </button>
+    </div>
+
+    <div class="ai-chat-panel" id="aiChatPanel">
+        <div class="ai-chat-header">
+            <div class="ai-header-info">
+                <img src="neiko.png" alt="" class="ai-header-avatar" onerror="this.style.display='none'; this.parentElement.querySelector('.ai-header-name').insertAdjacentHTML('beforebegin', '<div style=\'width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-right:10px;\'>🌸</div>'); this.parentElement.removeChild(this);">
+                <div>
+                    <div class="ai-header-name">Assistant Neiko</div>
+                    <div class="ai-header-status"><span class="ai-status-dot"></span> Online — Instagram Saver Guide</div>
+                </div>
+            </div>
+            <button class="ai-close-btn" onclick="toggleAiChat()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-welcome">
+                <div class="ai-welcome-avatar">🌸</div>
+                <div class="ai-welcome-text">
+                    <b>Hey there! 💕</b><br>
+                    I'm <b>Assistant Neiko</b>, your personal Instagram Saver guide. Ask me anything in <b>Hindi, Hinglish, or English</b>!
+                </div>
+            </div>
+        </div>
+        <div class="ai-typing" id="aiTyping">
+            <div class="ai-typing-dot"></div>
+            <div class="ai-typing-dot"></div>
+            <div class="ai-typing-dot"></div>
+        </div>
+        <div class="ai-chat-input-wrap">
+            <div class="ai-chat-input-area">
+                <input type="text" class="ai-chat-input" id="aiChatInput" placeholder="Ask me anything... (Hindi / Hinglish / English)" autocomplete="off" onkeypress="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendAiMessage(); }">
+                <button class="ai-send-btn" id="aiSendBtn" onclick="sendAiMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div class="ai-chat-footer">Powered by Neiko AI v5.0 • Context Aware</div>
+        </div>
+    </div>
+
 </body>
 </html>
